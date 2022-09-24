@@ -16,7 +16,7 @@ export default [
         output: {
             exports : 'default',
             name: 'JogDial',
-            file: 'demo/jogdial.js',
+            file: 'docs/jogdial.js',
             format: 'umd'
         }
     },
