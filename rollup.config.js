@@ -5,6 +5,7 @@ export default [
     {
         input: 'src/JogDial.js',
         output: {
+            exports : 'default',
             name: 'JogDial',
             file: pkg.browser,
             format: 'umd'
@@ -13,6 +14,7 @@ export default [
     {
         input: 'src/JogDial.js',
         output: {
+            exports : 'default',
             name: 'JogDial',
             file: 'demo/jogdial.js',
             format: 'umd'
@@ -21,8 +23,8 @@ export default [
     {
         input: 'src/JogDial.js',
         output: [
-            {file: pkg.main, format: 'cjs'},
-            {file: pkg.module, format: 'es'}
+            {exports : 'default',file: pkg.main, format: 'cjs'},
+            {exports : 'default',file: pkg.module, format: 'es'}
         ]
     }
 ];

@@ -1,7 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 class JogDial {
 
     toRad = Math.PI / 180;
@@ -302,4 +300,4 @@ class JogDial {
 
 }
 
-exports.JogDial = JogDial;
+module.exports = JogDial;

@@ -298,4 +298,4 @@ class JogDial {
 
 }
 
-export { JogDial };
+export { JogDial as default };

@@ -1,4 +1,4 @@
-export class JogDial {
+export default class JogDial {
 
     toRad = Math.PI / 180;
 
