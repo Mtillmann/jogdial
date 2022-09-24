@@ -1,0 +1,33 @@
+{
+  "name": "jogdial",
+  "version": "2.0.0",
+  "description": "JogDial is a simple JavaScript plugin that help you to create dial style controller easily on the webpage.",
+  "main": "dist/jogdial.cjs.js",
+  "module": "dist/jogdial.esm.js",
+  "browser": "dist/jogdial.umd.js",
+  "scripts": {
+    "build": "rollup -c && terser dist/jogdial.umd.js --output dist/jogdial.umd.min.js --compress --mangle",
+    "dev": "rollup -c -w"
+  },
+  "devDependencies": {
+    "rollup": "^2.79.1",
+    "terser": "^5.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mtillmann/JogDial.js.git"
+  },
+  "keywords": [
+    "jogdial",
+    "ui",
+    "control",
+    "knob",
+    "dial"
+  ],
+  "author": "Martin Tillmann <mtillmann@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mtillmann/JogDial.js/issues"
+  },
+  "homepage": "https://github.com/Mtillmann/JogDial.js#readme"
+}

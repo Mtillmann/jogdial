@@ -1,6 +1,7 @@
 class JogDial {
 
     toRad = Math.PI / 180;
+
     toDeg = 180 / Math.PI;
 
     quadrant = {
@@ -98,14 +99,20 @@ class JogDial {
         this.element.dataset.isAttachedToJogDialInstance = true;
         this.options = {...this.defaults, ...options};
 
-        this.setStage();
+        this.setupDOM();
 
-        this.setEvents();
+        this.setupEvents();
 
         this.angleTo(this.convertClockToUnit(this.options.degreeStartAt));
     }
 
-    setStage() {
+    set(input){
+        const maxDegree = this.options.maxDegree || 360;
+        const degree = (input > maxDegree) ? maxDegree: input;
+        this.angleTo(this.convertClockToUnit(degree), degree);
+    }
+
+    setupDOM() {
         this.knob = document.createElement('div');
         this.wheel = document.createElement('div');
 
@@ -123,12 +130,12 @@ class JogDial {
 
         //Set global position and size
         this.knob.style.setProperty('position', 'absolute');
-        this.knob.style.setProperty('width', this.options.knobSize)
-        this.knob.style.setProperty('height', this.options.knobSize)
+        this.knob.style.setProperty('width', this.options.knobSize);
+        this.knob.style.setProperty('height', this.options.knobSize);
 
         this.wheel.style.setProperty('position', 'absolute');
-        this.wheel.style.setProperty('width', this.options.wheelSize)
-        this.wheel.style.setProperty('height', this.options.wheelSize)
+        this.wheel.style.setProperty('width', this.options.wheelSize);
+        this.wheel.style.setProperty('height', this.options.wheelSize);
 
         //Set radius value
         const KRad = this.knob.clientWidth / 2;
@@ -161,25 +168,15 @@ class JogDial {
     }
 
 
-    setEvents() {
+    setupEvents() {
         //Detect event support type and override values
-        if (this.pointerEvent) { // Windows 8 touchscreen
-            this.domEvent = {
-                ...this.domEvent, ...{
-                    MOUSE_DOWN: 'pointerdown MSPointerDown',
-                    MOUSE_MOVE: 'pointermove MSPointerMove',
-                    MOUSE_OUT: 'pointerout MSPointerOut',
-                    MOUSE_UP: 'pointerup pointercancel MSPointerUp MSPointerCancel'
-                }
-            };
-        } else if (this.mobileEvent) { // Mobile standard
+        if (this.mobileEvent) { // Mobile standard
             this.domEvent = {
                 ...this.domEvent, ...{
                     MOUSE_DOWN: 'touchstart', MOUSE_MOVE: 'touchmove', MOUSE_OUT: 'touchleave', MOUSE_UP: 'touchend'
                 }
             };
         }
-
 
         // mouseDownEvent (MOUSE_DOWN)
         const mouseDownEvent = e => {
@@ -202,8 +199,8 @@ class JogDial {
             //Trigger down event
             if (this.pressed) {
                 this.element.dispatchEvent(new CustomEvent('jogdial.start', {
-                    detail: this.knob.dataset
-                }))
+                    detail: this.element.dataset
+                }));
             }
         };
 
@@ -235,8 +232,10 @@ class JogDial {
                     degree = this.convertUnitToClock(radian);
                 }
 
-                this.knob.dataset.rotation = rotation;
-                this.knob.dataset.degree = degree;
+                this.element.dataset.rotation = rotation;
+                this.element.style.setProperty('--rotation',rotation + 'deg');
+                this.element.dataset.degree = degree;
+                this.element.style.setProperty('--degree', degree + 'deg');
 
                 // update angle
                 this.angleTo(radian);
@@ -250,8 +249,8 @@ class JogDial {
 
                 // Trigger up event
                 this.element.dispatchEvent(new CustomEvent('jogdial.end', {
-                    detail: this.knob.dataset
-                }))
+                    detail: this.element.dataset
+                }));
             }
         };
 
@@ -273,9 +272,11 @@ class JogDial {
         this.knob.style.setProperty('left', x + 'px');
         this.knob.style.setProperty('top', y + 'px');
 
-        if (!this.knob.dataset.rotation === undefined) {
-            this.knob.dataset.rotation = this.options.degreeStartAt;
-            this.knob.dataset.degree = this.convertUnitToClock(radian);
+        if (!this.element.dataset.rotation === undefined) {
+            this.element.dataset.rotation = this.options.degreeStartAt;
+            this.element.style.setProperty('--rotation',this.options.degreeStartAt + 'deg');
+            this.element.dataset.degree = this.convertUnitToClock(radian);
+            this.element.style.setProperty('--degree', this.convertUnitToClock(radian) + 'deg');
         }
 
         if (triggeredDegree) {
@@ -284,13 +285,17 @@ class JogDial {
             this.rotation.current = triggeredDegree;
             this.rotation.previous = triggeredDegree % 360;
 
-            this.knob.dataset.rotation = triggeredDegree;
-            this.knob.dataset.degree = triggeredDegree % 360;
+            this.element.dataset.rotation = triggeredDegree;
+            this.element.style.setProperty('--rotation',triggeredDegree + 'deg');
+            this.element.dataset.degree = triggeredDegree % 360;
+            this.element.style.setProperty('--degree', triggeredDegree % 360 + 'deg');
         }
 
         this.element.dispatchEvent(new CustomEvent('jogdial.update', {
-            detail: this.knob.dataset
+            detail: this.element.dataset
         }));
     }
 
 }
+
+export { JogDial };

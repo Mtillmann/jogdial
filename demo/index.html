@@ -36,12 +36,12 @@
             width: 260px;
             height: 260px;
             margin: 20px auto;
-            background: url('base_one_bg.png?1392325180');
+            background: url('demo/base_one_bg.png?1392325180');
             background-repeat: none;
         }
 
         #jog_dial_one .knob {
-            background: url('base_one_knob.png?1392325228');
+            background: url('demo/base_one_knob.png?1392325228');
         }
 
         #jog_dial_one_meter {
@@ -185,15 +185,17 @@
     </style>
 </head>
 <body>
-<script src="JogDial.js"></script>
+<script src="../src/JogDial.js"></script>
 <script>
 
     window.addEventListener('load', () => {
 
         // Example 1
         const jogDialOneElement = document.getElementById('jog_dial_one');
-        new JogDial(jogDialOneElement,
+        const jd1 = new JogDial(jogDialOneElement,
             {wheelSize: '200px', knobSize: '70px', minDegree: 0, maxDegree: 360, degreeStartAt: 0});
+
+        jd1.set(100);
 
         jogDialOneElement.addEventListener('jogdial.update', e => {
             document.querySelector('#jog_dial_one_meter div').style.setProperty('width', Math.round((e.detail.rotation / 360) * 100) + '%')
@@ -201,8 +203,11 @@
 
         const jogDialTwoElement = document.getElementById('jog_dial_two');
 
-        new JogDial(jogDialTwoElement,
+        const jd2 = new JogDial(jogDialTwoElement,
             {debug: true, wheelSize: '260px', knobSize: '100px', degreeStartAt: 0});
+
+        jd2.set(100);
+
 
         jogDialTwoElement.addEventListener('jogdial.update', e => {
             document.getElementById('jog_dial_two_meter').textContent = 'Rotation:' + Math.round(e.detail.rotation) + ' / Degree: ' + Math.round(e.detail.degree);
