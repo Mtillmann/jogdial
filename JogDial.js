@@ -3,6 +3,16 @@ class JogDial {
     toRad = Math.PI / 180;
     toDeg = 180 / Math.PI;
 
+    quadrant = {
+        current: 0,
+        previous: 0
+    };
+
+    rotation = {
+        current: 0,
+        previous: 0
+    }
+
     pressed = false;
 
     // Detect mouse event type
@@ -96,8 +106,6 @@ class JogDial {
         this.info = {};
         this.info.now = {...this.degInfo};
         this.info.old = {...this.degInfo};
-        this.info.snapshot = {...{now: {...this.info.now}}, ...{old: {...this.info.old}}};
-        this.info.snapshot.direction = null;
 
         this.setStage();
 
@@ -227,25 +235,13 @@ class JogDial {
                 let rotation = this.info.now.rotation;//Math.ceil(info.now.rotation);
 
                 if (this.options.maxDegree != null && this.options.maxDegree <= rotation) {
-                    if (this.info.snapshot.direction == null) {
-                        this.info.snapshot.direction = 'right';
-                        this.info.snapshot.now = {...{now: this.info.now}};
-                        this.info.snapshot.old = {...{old: this.info.old}};
-                    }
                     rotation = this.options.maxDegree;
                     radian = this.convertClockToUnit(rotation);
                     degree = this.convertUnitToClock(radian);
                 } else if (this.options.minDegree !== null && this.options.minDegree >= rotation) {
-                    if (this.info.snapshot.direction === null) {
-                        this.info.snapshot.direction = 'left';
-                        this.info.snapshot.now = {...{now: this.info.now}};
-                        this.info.snapshot.old = {...{old: this.info.old}};
-                    }
                     rotation = this.options.minDegree;
                     radian = this.convertClockToUnit(rotation);
                     degree = this.convertUnitToClock(radian);
-                } else if (this.info.snapshot.direction != null) {
-                    this.info.snapshot.direction = null;
                 }
 
                 this.knob.dataset.rotation = rotation;
@@ -260,11 +256,6 @@ class JogDial {
         const mouseUpEvent = () => {
             if (this.pressed) {
                 this.pressed = false;
-                if (this.info.snapshot.direction != null) {
-                    this.info.snapshot.now = {...{now: this.info.now}};
-                    this.info.snapshot.old = {...{old: this.info.old}};
-                    this.info.snapshot.direction = null;
-                }
 
                 // Trigger up event
                 this.element.dispatchEvent(new CustomEvent('jogdial.end', {
