@@ -4,8 +4,8 @@ class JogDial {
     toDeg = 180 / Math.PI;
 
     quadrant = {
-        current: 0,
-        previous: 0
+        current: 1,
+        previous: 1
     };
 
     rotation = {
@@ -28,11 +28,6 @@ class JogDial {
         degreeStartAt: 0,
         minDegree: null,  // (null) infinity
         maxDegree: null   // (null) infinity
-    };
-
-    // Predefined rotation info
-    degInfo = {
-        rotation: 0, quadrant: 1
     };
 
     // Predefined DOM events
@@ -60,18 +55,18 @@ class JogDial {
         if (x > 0 && y > 0) return 4; else if (x < 0 && y > 0) return 3; else if (x < 0 && y < 0) return 2; else if (x >= 0 && y < 0) return 1;
     };
 
-    // Returne the sum of rotation value
-    getRotation(self, quadrant, newDegree) {
+    // Return the sum of rotation value
+    getRotation(quadrant, newDegree) {
         let rotation;
         let delta = 0;
-        if (quadrant === 1 && this.info.old.quadrant === 2) { //From 360 to 0
+        if (quadrant === 1 && this.quadrant.previous === 2) { //From 360 to 0
             delta = 360;
-        } else if (quadrant === 2 && this.info.old.quadrant === 1) { //From 0 to 360
+        } else if (quadrant === 2 && this.quadrant.previous === 1) { //From 0 to 360
             delta = -360;
         }
-        rotation = newDegree + delta - this.info.old.rotation + this.info.now.rotation;
-        this.info.old.rotation = newDegree; // return 0 ~ 360
-        this.info.old.quadrant = quadrant; // return 1 ~ 4
+        rotation = newDegree + delta - this.rotation.previous + this.rotation.current;
+        this.rotation.previous = newDegree; // return 0 ~ 360
+        this.quadrant.previous = quadrant; // return 1 ~ 4
         return rotation;
     };
 
@@ -79,7 +74,6 @@ class JogDial {
     checkBoxCollision(bound, point) {
         return bound.x1 < point.x && bound.x2 > point.x && bound.y1 < point.y && bound.y2 > point.y;
     };
-
 
     addEvent(el, type, handler, capture) {
         type.split(' ').forEach(t => el.addEventListener(t, handler, capture));
@@ -95,7 +89,7 @@ class JogDial {
 
     constructor(element, options) {
         if (element.dataset.isAttachedToJogDialInstance) {
-            console.error('Please Check your code:\njogDial can not be initialized twice in a same element.');
+            console.error('Please Check your code: JogDial can not be initialized twice in a same element.');
             return false;
         }
 
@@ -103,9 +97,6 @@ class JogDial {
 
         this.element.dataset.isAttachedToJogDialInstance = true;
         this.options = {...this.defaults, ...options};
-        this.info = {};
-        this.info.now = {...this.degInfo};
-        this.info.old = {...this.degInfo};
 
         this.setStage();
 
@@ -231,8 +222,8 @@ class JogDial {
                 let degree = this.convertUnitToClock(radian);
 
                 //Calculate the current rotation value based on pointer offset
-                this.info.now.rotation = this.getRotation(self, (quadrant === undefined) ? this.info.old.quadrant : quadrant, degree);
-                let rotation = this.info.now.rotation;//Math.ceil(info.now.rotation);
+                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, degree);
+                let rotation = this.rotation.current;
 
                 if (this.options.maxDegree != null && this.options.maxDegree <= rotation) {
                     rotation = this.options.maxDegree;
@@ -288,8 +279,10 @@ class JogDial {
         }
 
         if (triggeredDegree) {
-            this.info.now = {rotation: triggeredDegree, quadrant: quadrant};
-            this.info.old = {rotation: triggeredDegree % 360, quadrant: quadrant};
+            this.quadrant.current = quadrant;
+            this.quadrant.previous = quadrant;
+            this.rotation.current = triggeredDegree;
+            this.rotation.previous = triggeredDegree % 360;
 
             this.knob.dataset.rotation = triggeredDegree;
             this.knob.dataset.degree = triggeredDegree % 360;
