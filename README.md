@@ -1,15 +1,15 @@
-# JogDial.js
+# JogDialORiginal.js
 
 ## A JavaScript plugin for jog dial controls.
-JogDial is a simple JavaScript plugin that help you to create dial style controller easily on the webpage.
+JogDialORiginal is a simple JavaScript plugin that help you to create dial style controller easily on the webpage.
 
 ## Supported browsers and device
-JogDial supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of modern browsers include mobile device.
+JogDialORiginal supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of modern browsers include mobile device.
 
 ## Features
 * Does not require any other JavaScript library like jQuery.
 * Cross-browser support (IE7+)
-* Multi-touch support (you can control multiple number of JogDial elements at once in touch screen) 
+* Multi-touch support (you can control multiple number of JogDialORiginal elements at once in touch screen) 
 * DOM Events
 * AMD Support (RequreJS)
 
@@ -19,20 +19,20 @@ JogDial supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of moder
 ## Usage
 
 ### Basics
-Here is a basic example of JogDial.js initialization. This will start the JogDial in debug mode.
+Here is a basic example of JogDialORiginal.js initialization. This will start the JogDialORiginal in debug mode.
 
-You must create the target element for the JogDial and setup the width and height property before the code start.
+You must create the target element for the JogDialORiginal and setup the width and height property before the code start.
 
     var el = document.getElementById('your_element');
-    var dial = JogDial(el, {debug: true});
+    var dial = JogDialORiginal(el, {debug: true});
     
 You can change the setting by passing an options (`array`) in second argument.
 
     var options = {debug: true, wheelSize: 90%, knobSize: 50%, minDegree: 0};
-    var dial = JogDial(el, options);
+    var dial = JogDialORiginal(el, options);
     
 ### Styling
-The easiest way to style the JogDial is adding background image to your target element and knob element created from JogDial script.
+The easiest way to style the JogDialORiginal is adding background image to your target element and knob element created from JogDialORiginal script.
 
 JodDial always return the knob id name append to the target element name you've created.
 
@@ -47,19 +47,19 @@ For an example, if you named the tag element id as __"dial"__, then knob id will
         // This is your knob style
     }
     
-You can add any additional elements inside of your target element and it won't interfere the JogDial function.
+You can add any additional elements inside of your target element and it won't interfere the JogDialORiginal function.
 
 
 ### Options
-Here is a list of options can be used on JogDial.
+Here is a list of options can be used on JogDialORiginal.
 
 Options              | Descriptions                                                     | Default         
 :------------------- |:-----------------------------------------------------------------|:---------------
 debug `bool`         | Show debug overlay on the top of screen                          |false           |
-touchMode `string`   | Set the active touch area of JogDial control. 'knob' or 'wheel'  |knob            |
+touchMode `string`   | Set the active touch area of JogDialORiginal control. 'knob' or 'wheel'  |knob            |
 knobSize `int`       | Set the diameter of knob in percentage or pixel                  |30%             |
 wheelSize `int`      | Set the diameter of wheel in percentage or pixel                 |100%            |
-zIndex `int`         | Set the z-index of JogDial                                       |9999            |
+zIndex `int`         | Set the z-index of JogDialORiginal                                       |9999            |
 degreeStartAt `int`  | Set the degree of wheel at start                                 |0               |
 minDegree `int`      | Set the minimum degree of wheel rotation                         |null (infinite) |
 maxDegree `int`      | Set the maximum degree of wheel rotation                         |null (infinite) |
@@ -67,7 +67,7 @@ maxDegree `int`      | Set the maximum degree of wheel rotation                 
 ### Events
 Events can be added or removed with the on and off methods and those are chainable like a jQuery.
     
-    JogDial(el, {debug: true})
+    JogDialORiginal(el, {debug: true})
     .on("mousemove", function(event){ console.log(event.target.rotation); })
     .on("mouseup", function(event){ console.log(event.target.rotation); });
 
@@ -81,11 +81,11 @@ Events can be added or removed with the on and off methods and those are chainab
     event.target.degree    {number}     Current degree of circle in clock angle.
     
 #### Triggering
-You can change the angle of JogDial element by passing the number value to 'angle' function.
+You can change the angle of JogDialORiginal element by passing the number value to 'angle' function.
 
-    var dial = JogDial(el, {debug: true});
+    var dial = JogDialORiginal(el, {debug: true});
     dial.angle(45); 
-    // This will change the JogDial degree to 45.
+    // This will change the JogDialORiginal degree to 45.
     
     
 ## Copyright

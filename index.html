@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <style>
+        /* Some style */
+        .inline {
+            display: inline-block;
+        }
+
+        #dials {
+            height: 320px;
+            overflow: hidden;
+        }
+
+        .dial {
+            display: block;
+            position: relative;
+            height: 320px;
+        }
+
+        .dial.hidden {
+            display: none;
+        }
+
+        #jog_dial_one {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 20px auto;
+            background: url('base_one_bg.png?1392325180');
+            background-repeat: none;
+        }
+
+        #jog_dial_one .knob {
+            background: url('base_one_knob.png?1392325228');
+        }
+
+        #jog_dial_one_meter {
+            width: 200px;
+            height: 10px;
+            margin: 20px auto 30px;
+            background: #999;
+            overflow: hidden;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            -o-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        #jog_dial_one_meter div {
+            position: relative;
+            width: 0;
+            height: 100%;
+            background: #80e93a;
+        }
+
+        #jog_dial_two {
+            width: 260px;
+            height: 260px;
+            margin: 20px auto 0;
+        }
+
+        #jog_dial_two_meter {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 0;
+            font-size: 1.2em;
+        }
+
+        .code_block {
+            padding: 10px 10px;
+            background: #eee;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            -o-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        /* Bootsrtrap Jumbotron style below */
+        /* Space out content a bit */
+        body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        /* Everything but the jumbotron gets side spacing for mobile first views */
+        .header,
+        .marketing,
+        .footer {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        /* Custom page header */
+        .header {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header h3 {
+            padding-bottom: 19px;
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: 40px;
+        }
+
+        /* Custom page footer */
+        .footer {
+            padding-top: 19px;
+            color: #777;
+            border-top: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        /* Customize container */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 730px;
+            }
+        }
+
+        .container-narrow > hr {
+            margin: 30px 0;
+        }
+
+        /* Main marketing message and sign up button */
+        .jumbotron {
+            text-align: center;
+            padding: 15px 5px 25px;
+            background: #eee;
+        }
+
+        .jumbotron .btn {
+            font-size: 21px;
+        }
+
+        .jumbotron .btn-group {
+            display: inline-block;
+            margin: 10px 0 20px 10px;
+        }
+
+        .lt-ie8 .jumbotron .btn-group {
+            width: 80px;
+        }
+
+        /* Supporting marketing content */
+        .marketing {
+            margin: 40px 0;
+        }
+
+        .marketing p + h4 {
+            margin-top: 28px;
+        }
+
+        /* Responsive: Portrait tablets and up */
+        @media screen and (min-width: 768px) {
+            /* Remove the padding we set earlier */
+            .header,
+            .marketing,
+            .footer {
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            /* Space out the masthead */
+            .header {
+                margin-bottom: 30px;
+            }
+
+            /* Remove the bottom border on the jumbotron for visual effect */
+            .jumbotron {
+                border-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<script src="JogDial.js"></script>
+<script>
+
+    window.addEventListener('load', () => {
+
+        // Example 1
+        const jogDialOneElement = document.getElementById('jog_dial_one');
+        new JogDial(jogDialOneElement,
+            {wheelSize: '200px', knobSize: '70px', minDegree: 0, maxDegree: 360, degreeStartAt: 0});
+
+        jogDialOneElement.addEventListener('jogdial.update', e => {
+            document.querySelector('#jog_dial_one_meter div').style.setProperty('width', Math.round((e.detail.rotation / 360) * 100) + '%')
+        });
+
+        const jogDialTwoElement = document.getElementById('jog_dial_two');
+
+        new JogDial(jogDialTwoElement,
+            {debug: true, wheelSize: '260px', knobSize: '100px', degreeStartAt: 0});
+
+        jogDialTwoElement.addEventListener('jogdial.update', e => {
+            document.getElementById('jog_dial_two_meter').textContent = 'Rotation:' + Math.round(e.detail.rotation) + ' / Degree: ' + Math.round(e.detail.degree);
+        });
+        // document.querySelector('.dial:nth-child(2)').style.setProperty('opacity',0);
+
+        //Example swap buttons
+        document.querySelector('.btn-group').addEventListener('click', (e) => {
+            const btn = e.target;
+
+            document.querySelectorAll('.dial').forEach((item, i) => {
+                item.classList.toggle('hidden', i !== parseInt(btn.dataset.dial))
+                document.querySelectorAll('.btn-group .btn')[i].classList.toggle('active', i === parseInt(btn.dataset.dial));
+
+            });
+        });
+    })
+
+</script>
+<div class="container">
+    <div class="jumbotron">
+        <h1>JogDial.js</h1>
+
+        <div id="dials">
+            <div class="dial">
+                <div id="jog_dial_one"></div>
+                <div id="jog_dial_one_meter">
+                    <div></div>
+                </div>
+            </div>
+            <div class="dial">
+                <div id="jog_dial_two"></div>
+                <p id="jog_dial_two_meter">Debug mode. Infinite loop</p>
+            </div>
+        </div>
+        <h3 class="inline">Examples</h3>
+        <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-default active" data-dial="0">1</button>
+            <button type="button" class="btn btn-default" data-dial="1">2</button>
+        </div>
+
+        <p class="lead">Spins freely. A JavaScript plugin for jog dial controls.
+        <p>
+        <p><a class="btn btn-lg btn-success" href="https://github.com/ohsiwon/JogDial.js" role="button">Download
+            JogDial.js</a></p>
+        <h6>Build version 1.0</h6>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-8">
+            <h4>Small and standalone</h4>
+            <p>JogDial is 9kb when minified, and it does not require jQuery or other libraries to run the script.</p>
+
+            <h4>Supported browsers and device</h4>
+            <p>JogDial supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of modern browsers include mobile
+                device.</p>
+
+            <h4>Code example</h4>
+            <p class="code_block">JogDial(element, options)<br/>.on( "mousemove", function(event) { alert('You move
+                it!') } );</p>
+            <a href="https://github.com/ohsiwon/JogDial.js">Click here for more details</a>
+        </div>
+
+        <div class="col-lg-4">
+            <h4>Options</h4>
+            <ul>
+                <li>debug {bool}</li>
+                <li>touchMode {string}</li>
+                <li>knobSize {% or px}</li>
+                <li>wheelSize {% or px}</li>
+                <li>zIndex {int}</li>
+                <li>degreeStartAt {int}</li>
+                <li>minDegree {int | null}</li>
+                <li>maxDegree {int | null}</li>
+            </ul>
+
+            <h4>Event list</h4>
+            <ul>
+                <li>mousedown</li>
+                <li>mousemove</li>
+                <li>mouseup</li>
+            </ul>
+
+            <h4>Event data list</h4>
+            <ul>
+                <li>event.target.rotation</li>
+                <li>event.target.degree</li>
+            </ul>
+
+            <h4>Triggering</h4>
+            <p>angle( deg )</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative
+            Commons Attribution 3.0 Unported License.</a></p>
+        <p>&copy; 2014. <a href="http://www.ohsean.net" target="_blank">Sean Oh</a></p>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,19 +1,21 @@
 /*
-* JogDial.js - v 1.0
+* JogDialORiginal.js - v 1.0
 *
 * Copyright (c) 2014 Sean Oh (ohsiwon@gmail.com)
 * Licensed under the MIT license 
 */
 
+
 (function (window, undefined) {
+  return;
   'use strict';
 
   /*
   * Constructor
-  * JogDial
+  * JogDialORiginal
   * @param  {HTMLElement}    element
   * @param  {Object}         options
-  * return  {JogDial.Instance}
+  * return  {JogDialORiginal.Instance}
   */
   var JogDial = function (element, options) {
     return new JogDial.Instance(element, options || {});
@@ -101,7 +103,7 @@
       },
 
       // Return the current quadrant.
-      // Note: JogDial's Cartesian plane is flipped, hence it's returning reversed value.
+      // Note: JogDialORiginal's Cartesian plane is flipped, hence it's returning reversed value.
       getQuadrant: function(x, y){
         if (x>0 && y>0) return 4;
         else if (x<0 && y>0) return 3;
@@ -188,10 +190,10 @@
 
   /*
   * Constructor
-  * JogDial.Instance
+  * JogDialORiginal.Instance
   * @param  {HTMLElement}    element
   * @param  {Object}         options
-  * return  {JogDial.Instance}
+  * return  {JogDialORiginal.Instance}
   */
   JogDial.Instance = function (el ,opt) {    
     // Prevent duplication
@@ -261,8 +263,8 @@
   function setStage(self) {
     /*
     * Create new elements
-    * {HTMLElement}  JogDial.Instance.knob
-    * {HTMLElement}  JogDial.Instance.wheel
+    * {HTMLElement}  JogDialORiginal.Instance.knob
+    * {HTMLElement}  JogDialORiginal.Instance.wheel
     */
     var item   = {},
     BId      = self.base.getAttribute("id"),
@@ -333,8 +335,8 @@
   function setEvents(self) {
     /*
     * Set events to control elements
-    * {HTMLElement}  JogDial.Instance.knob
-    * {HTMLElement}  JogDial.Instance.wheel
+    * {HTMLElement}  JogDialORiginal.Instance.knob
+    * {HTMLElement}  JogDialORiginal.Instance.wheel
     */    
 
     //Detect event support type and override values
@@ -432,7 +434,7 @@
           info.snapshot.direction = null;
         }
 
-        // Update JogDial data information
+        // Update JogDialORiginal data information
         JogDial.utils.extend(self.knob, {
           rotation: rotation,
           degree: degree
@@ -474,7 +476,7 @@
     self.knob.style.top = _y + 'px';
 
     if(self.knob.rotation == undefined){
-     // Update JogDial data information
+     // Update JogDialORiginal data information
       JogDial.utils.extend(self.knob, {
         rotation: self.opt.degreeStartAt,
         degree: JogDial.utils.convertUnitToClock(radian)
@@ -482,7 +484,7 @@
     }
 
     if(triggeredDegree){
-      // Update JogDial data information
+      // Update JogDialORiginal data information
       self.info.now = JogDial.utils.extend({},{rotation:triggeredDegree, quadrant: quadrant});
       self.info.old = JogDial.utils.extend({},{rotation: triggeredDegree%360, quadrant: quadrant});     
       JogDial.utils.extend(self.knob, {
