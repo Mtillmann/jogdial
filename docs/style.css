@@ -14,10 +14,9 @@
     --bs-progress-bar-transition: none;
 }
 
-#example5{
+#example5 .wheel{
     border:2px dashed #000;
     border-radius: 50%;
-
 }
 
 #example5 .knob::before{

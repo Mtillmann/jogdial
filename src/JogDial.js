@@ -14,8 +14,7 @@ export default class JogDial {
     pressed = false;
 
     // Detect mouse event type
-    mobileEvent = ('ontouchstart' in window) && window.navigator.userAgent.match(/Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/);
-    pointerEvent = (window.navigator.pointerEnabled || window.navigator.msPointerEnabled) ? true : false;
+    supportsTouchEvents = ('ontouchstart' in window);
 
     // Predefined options
     defaults = {
@@ -26,7 +25,6 @@ export default class JogDial {
         attrPrefix: 'jd',
         cssVarPrefix: 'jd',
         eventPrefix: 'jd',
-        bindInput: true,
         roundInputValue: true,
         input: null
     };
@@ -97,26 +95,26 @@ export default class JogDial {
         }
 
         //Set radius value
-        const KRad = this.knob.clientWidth / 2;
-        const WRad = this.wheel.clientWidth / 2;
+        const knobRadius = this.knob.clientWidth / 2;
+        const wheelRadius = this.wheel.clientWidth / 2;
 
         //Set knob properties
-        this.knob.style.setProperty('margin', -KRad + 'px 0 0 ' + -KRad + 'px');
+        this.knob.style.setProperty('margin', -knobRadius + 'px 0 0 ' + -knobRadius + 'px');
 
-        const WMargnLT = (this.element.clientWidth - this.wheel.clientWidth) / 2;
-        const WMargnTP = (this.element.clientHeight - this.wheel.clientHeight) / 2;
+        const wheelMarginLeft = (this.element.clientWidth - this.wheel.clientWidth) / 2;
+        const wheelMarginTop = (this.element.clientHeight - this.wheel.clientHeight) / 2;
 
-        this.wheel.style.setProperty('margin', WMargnTP + 'px 0 0 ' + WMargnLT + 'px');
+        this.wheel.style.setProperty('margin', wheelMarginTop + 'px 0 0 ' + wheelMarginLeft + 'px');
 
         //set radius and center point value
-        this.radius = WRad - KRad;
-        this.center = {x: WRad + WMargnLT, y: WRad + WMargnTP};
+        this.radius = wheelRadius - knobRadius;
+        this.center = {x: wheelRadius + wheelMarginLeft, y: wheelRadius + wheelMarginTop};
 
         if (this.options.debug) {
             this.element.dataset[this.attrNames.debug] = 'true';
         }
 
-        if (this.options.input && this.options.bindInput) {
+        if (this.options.input) {
             this.options.input.addEventListener('input', e => {
                 this.set(parseInt(e.target.value));
             });
@@ -126,7 +124,7 @@ export default class JogDial {
 
     setupEvents() {
         //Detect event support type and override values
-        if (this.mobileEvent) { // Mobile standard
+        if (this.supportsTouchEvents) { // Mobile standard
             this.domEvent = {
                 ...this.domEvent, ...{
                     MOUSE_DOWN: 'touchstart', MOUSE_MOVE: 'touchmove', MOUSE_OUT: 'touchleave', MOUSE_UP: 'touchend'
@@ -238,7 +236,12 @@ export default class JogDial {
         }
 
         this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
-            detail: this.element.dataset
+            detail: {
+                rotation : parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
+                progress : parseFloat(this.element.dataset[this.attrNames.progress] || 0),
+                angle : parseFloat(this.element.dataset[this.attrNames.angle] || 0),
+                percent : this.element.dataset[this.attrNames.percent] || '0%',
+            }
         }));
     }
 
@@ -262,19 +265,17 @@ export default class JogDial {
         this.element.dataset[this.attrNames.angle] = angle;
         this.element.style.setProperty(this.cssVarNames.angle, angle + 'deg');
 
-        if (this.options.input && this.options.bindInput) {
+        if (this.options.input) {
             this.options.input.value = this.options.roundInputValue ? Math.round(angle) : angle;
         }
-
-
     }
 
     //Calculating x and y coordinates
     getCoordinates(e) {
         const target = this.wheel;
         const rect = target.getBoundingClientRect();
-        const x = ((this.mobileEvent) ? e.targetTouches[0].clientX : e.clientX) - rect.left;
-        const y = ((this.mobileEvent) ? e.targetTouches[0].clientY : e.clientY) - rect.top;
+        const x = ((this.supportsTouchEvents) ? e.targetTouches[0].clientX : e.clientX) - rect.left;
+        const y = ((this.supportsTouchEvents) ? e.targetTouches[0].clientY : e.clientY) - rect.top;
         return {x, y};
     };
 

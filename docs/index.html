@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>JogDial.js Examples</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
@@ -17,10 +17,10 @@
 
 <div class="container">
 
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
 
-            <h1 class="display-1">JogDial.js</h1>
+            <h1 class="display-1">JogDial.js Examples</h1>
         </div>
     </div>
     <div class="row mb-3">
@@ -37,6 +37,17 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Basic example</h5>
+            <p>This example shows a basic dial control using Sean's original bitmap backgrounds.
+            The dial is controlled by moving the knob.
+            </p>
+
+            <p>Note: The background image is actually attached to the <code>.dial</code>-element because the
+                <code>.wheel</code>-element is smaller than the <code>.dial</code>-element to allow for a smaller turn radius of the <code>.knob</code>-element</code></p>
+
+            <p>The progress bar below the dial is update by attaching an <code>update</code>-event listener to <code>#example1</code>.</p>
+
+            <p>The actual sizing for all examples on this page is achieved using bootstrap's grid and aspect ratio utils.</p>
+
         </div>
     </div>
     <div class="row mb-3">
@@ -52,6 +63,16 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Free Rotating</h5>
+            <p>This example's dial is not locked to a range of angles like the first example. You can spin the dial beyond 360 degrees and the angle will start with 0 again.</p>
+
+            <p>The example uses the debug option, which simply activates some
+            default styling for the dial and knob.</p>
+
+            <p>
+                In the <code>&lt;code&gt;</code>-block below the dial, a dump of
+                the event listeners <code>e.detail</code> is displayed. Observe how the rotation and angle values differ.
+            </p>
+
         </div>
     </div>
 
@@ -65,6 +86,9 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Control using the wheel</h5>
+            <p>While in the examples above, <code>options.touchMode</code> is set to <code>knob</code>, in this example it's set to <code>wheel</code>. This means you can manipulate the dial by touching it anywhere.</p>
+
+            <p>Note: when the touchMode is set to wheel, <code>div.foreground</code> is appended to the <code>.dial</code>-element to prevent unexpected behaviour when moving the pointer from <code>.knob</code> to <code>.wheel</code> etc</p>
         </div>
     </div>
 
@@ -79,7 +103,12 @@
             <input id="example4_input" class="form-control" type="number" min="0" max="360" step="1">
         </div>
         <div class="col-12 col-lg-9">
-            <h5 class="display-5">Using inputs</h5>
+            <h5 class="display-5">Binding inputs</h5>
+            <p>To make the whole project a little more useful, here's an example of how to two-way-bind an input to the dial.</p>
+
+            <p>The input is passed as <code>options.input</code> to the constructor. Set <code>options.roundInputValue</code> to <code>false</code> to receive the raw angle value.</p>
+
+            <p>Note: if you want to update the input's value programmatically, rather use the <code>yourJogDialInstance.set</code>-method, which will update the input's value in turn.</p>
         </div>
     </div>
 
@@ -94,6 +123,8 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Rotating Controls</h5>
+            <p>Since all relevant state is exposed as data-attributes and css-variables on the instance's element, it's trivial to use the angle css-var and rotate the <code>.knob</code> according to the
+            current angle of the dial.</p>
         </div>
     </div>
 

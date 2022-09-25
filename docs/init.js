@@ -10,20 +10,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
     example1Node.addEventListener('jd.update', e => {
         const node = document.querySelector('#example1_progress div');
-        node.textContent = parseInt(e.detail.jdPercent) + '%';
-        node.style.setProperty('width', e.detail.jdPercent)
+        node.textContent = parseInt(e.detail.percent) + '%';
+        node.style.setProperty('width', e.detail.percent)
     });
 
     // Example 2
     const example2Node = document.getElementById('example2');
 
     example2Node.addEventListener('jd.update', e => {
-        const debug = Object.fromEntries(
-            Object.entries(e.detail)
-                .filter(item => /angle|rotation|percent|progress/i.test(item[0]))
-                .map(item => [item[0].replace(/^[a-z]+/, '').toLowerCase(), item[1]])
-        );
-        document.getElementById('example2_debug').textContent = JSON.stringify(debug, null, 2);
+        document.getElementById('example2_debug').textContent = JSON.stringify(e.detail, null, 2);
     });
 
     const example2Instance = new JogDial(example2Node, {debug: true});
@@ -45,6 +40,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
     // Example 5
-    new JogDial(document.getElementById('example5'), {});
+    new JogDial(document.getElementById('example5'), {touchMode: 'wheel'});
 
 });
