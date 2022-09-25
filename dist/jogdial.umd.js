@@ -149,7 +149,7 @@
 
             //Set knob properties
             this.knob.style.setProperty('margin', -KRad + 'px 0 0 ' + -KRad + 'px');
-            this.knob.style.setProperty('z-index', this.options.zIndex);
+            this.knob.style.setProperty('z-index', this.options.zIndex + 1);
 
             const WMargnLT = (this.element.clientWidth - this.wheel.clientWidth) / 2;
             const WMargnTP = (this.element.clientHeight - this.wheel.clientHeight) / 2;
