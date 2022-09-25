@@ -17,17 +17,19 @@
     display: none;
 }
 
-#example1 {
+.jogdial{
     position: relative;
     width: 100%;
     height: 100%;
-    xmargin: 20px auto;
-    background: url('img/base_one_bg.png?1392325180');
-    background-repeat: no-repeat;
+}
+
+#example1 {
+    background-image: url('img/base_one_bg.png');
+    background-size: cover;
 }
 
 #example1 .knob {
-    background: url('img/base_one_knob.png?1392325228');
+    background: url('img/base_one_knob.png');
     background-size: cover;
 }
 
