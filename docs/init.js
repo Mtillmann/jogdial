@@ -27,19 +27,19 @@ window.addEventListener('DOMContentLoaded', () => {
     // Example 3
     new JogDial(document.getElementById('example3'),
         {
-            touchMode: 'wheel',
+            mode: 'wheel',
             debug: true
         });
 
     // Example 4
     new JogDial(document.getElementById('example4'),
         {
-            touchMode: 'wheel',
+            mode: 'wheel',
             debug: true,
             input: document.getElementById('example4_input')
         });
 
     // Example 5
-    new JogDial(document.getElementById('example5'), {touchMode: 'wheel'});
+    new JogDial(document.getElementById('example5'), {mode: 'wheel'});
 
 });

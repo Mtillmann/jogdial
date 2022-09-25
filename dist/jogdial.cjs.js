@@ -20,7 +20,7 @@ class JogDial {
 
     // Predefined options
     defaults = {
-        touchMode: 'knob',  // knob | wheel
+        mode: 'knob',
         angle: 0,
         minAngle: -Infinity,
         maxAngle: Infinity,
@@ -90,7 +90,7 @@ class JogDial {
         this.element.appendChild(this.wheel);
         this.element.appendChild(this.knob);
 
-        if(this.options.touchMode === 'wheel'){
+        if(this.options.mode === 'wheel'){
             let foreground = document.createElement('div');
             foreground.classList.add('foreground');
             this.element.appendChild(foreground);
@@ -136,7 +136,7 @@ class JogDial {
 
         // mouseDownEvent (MOUSE_DOWN)
         const mouseDownEvent = e => {
-            switch (this.options.touchMode) {
+            switch (this.options.mode) {
                 case 'knob':
                 default:
                     this.pressed = this.checkBoxCollision({
