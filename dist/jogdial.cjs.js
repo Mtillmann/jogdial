@@ -25,9 +25,11 @@ class JogDial {
         angle: 0,
         minAngle: -Infinity,
         maxAngle: Infinity,
-        attrPrefix : 'jd',
+        attrPrefix: 'jd',
         cssVarPrefix: 'jd',
-        bindInput : true
+        bindInput: true,
+        roundInputValue: true,
+        input : null
     };
 
     // Predefined DOM events
@@ -37,25 +39,26 @@ class JogDial {
 
     attrNames = {};
     cssVarNames = {};
+
     constructor(element, options) {
 
         options = {...this.defaults, ...options};
         this.options = options;
 
         this.attrNames = {
-            attached : `${options.attrPrefix}IsAttached`,
-            debug : `${options.attrPrefix}Debug`,
-            angle : `${options.attrPrefix}Angle`,
-            rotation : `${options.attrPrefix}Rotation`,
-            progress : `${options.attrPrefix}Progress`,
-            percent : `${options.attrPrefix}Percent`,
+            attached: `${options.attrPrefix}IsAttached`,
+            debug: `${options.attrPrefix}Debug`,
+            angle: `${options.attrPrefix}Angle`,
+            rotation: `${options.attrPrefix}Rotation`,
+            progress: `${options.attrPrefix}Progress`,
+            percent: `${options.attrPrefix}Percent`,
         };
 
         this.cssVarNames = {
-            angle : `--${options.attrPrefix}-angle`,
-            rotation : `--${options.attrPrefix}-rotation`,
-            progress : `--${options.attrPrefix}-progress`,
-            percent : `--${options.attrPrefix}-percent`,
+            angle: `--${options.attrPrefix}-angle`,
+            rotation: `--${options.attrPrefix}-rotation`,
+            progress: `--${options.attrPrefix}-progress`,
+            percent: `--${options.attrPrefix}-percent`,
         };
 
         if (this.attrNames.attached in element.dataset) {
@@ -71,9 +74,9 @@ class JogDial {
         this.angleTo(this.convertClockToUnit(this.options.angle));
     }
 
-    set(input){
+    set(input) {
         const maxAngle = this.options.maxAngle || 360;
-        const angle = (input > maxAngle) ? maxAngle: input;
+        const angle = (input > maxAngle) ? maxAngle : input;
         this.angleTo(this.convertClockToUnit(angle), angle);
     }
 
@@ -107,6 +110,12 @@ class JogDial {
 
         if (this.options.debug) {
             this.element.dataset[this.attrNames.debug] = 'true';
+        }
+
+        if (this.options.input && this.options.bindInput) {
+            this.options.input.addEventListener('input', e => {
+               this.set(parseInt(e.target.value));
+            });
         }
     }
 
@@ -230,25 +239,29 @@ class JogDial {
         }));
     }
 
-    setAttributes(rotation, angle){
-        this.element.dataset[this.attrNames.rotation] = rotation;
-        this.element.style.setProperty('--rotation',rotation + 'deg');
-        this.element.dataset[this.attrNames.angle] = angle;
-        this.element.style.setProperty('--angle', angle + 'deg');
-
+    setAttributes(rotation, angle) {
 
         let progress;
-        if(this.options.maxAngle === Infinity){
+        if (this.options.maxAngle === Infinity) {
             progress = angle / 360;
-        }else {
+        } else {
             progress = rotation / this.options.maxAngle;
         }
 
         let percent = (progress * 100) + '%';
         this.element.dataset[this.attrNames.progress] = progress;
-        this.element.style.setProperty('--progress',progress);
+        this.element.style.setProperty('--progress', progress);
         this.element.dataset[this.attrNames.percent] = percent;
         this.element.style.setProperty('--percent', percent);
+
+        this.element.dataset[this.attrNames.rotation] = rotation;
+        this.element.style.setProperty('--rotation', rotation + 'deg');
+        this.element.dataset[this.attrNames.angle] = angle;
+        this.element.style.setProperty('--angle', angle + 'deg');
+
+        if(this.options.input && this.options.bindInput){
+            this.options.input.value = this.options.roundInputValue ? Math.round(angle) : angle;
+        }
 
 
     }

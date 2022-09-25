@@ -37,5 +37,12 @@ window.addEventListener('DOMContentLoaded', () => {
             debug: true
         });
 
+    new JogDial(document.getElementById('example4'),
+        {
+            touchMode: 'wheel',
+            debug: true,
+            input: document.getElementById('example4_input')
+        });
+
 
 });
