@@ -9,27 +9,33 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
     example1Node.addEventListener('jogdial.update', e => {
-        const perc = Math.round((e.detail.rotation / 360) * 100) + '%';
         const node = document.querySelector('#example1_progress div');
-        node.textContent = perc;
-        node.style.setProperty('width',  perc)
+        node.textContent = parseInt(e.detail.jdPercent) + '%';
+        node.style.setProperty('width',  e.detail.jdPercent)
     });
 
     const example2Node = document.getElementById('example2');
-    new JogDial(example2Node,
+    const example2Instance = new JogDial(example2Node,
         {
             debug: true
         });
 
     example2Node.addEventListener('jogdial.update', e => {
-
         const debug = Object.fromEntries(
             Object.entries(e.detail)
                 .filter(item => /angle|rotation|percent|progress/i.test(item[0]))
                 .map(item => [item[0].replace(/^[a-z]+/,'').toLowerCase(), item[1]])
         );
         document.getElementById('example2_debug').textContent = JSON.stringify(debug, null, 2);
-        console.log({debug})
     });
+
+    example2Instance.set(44);
+
+    new JogDial(document.getElementById('example3'),
+        {
+            touchMode: 'wheel',
+            debug: true
+        });
+
 
 });
