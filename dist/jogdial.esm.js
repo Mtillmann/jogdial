@@ -1,8 +1,5 @@
 class JogDial {
 
-    toRad = Math.PI / 180;
-
-    toDeg = 180 / Math.PI;
 
     quadrant = {
         current: 1,
@@ -12,6 +9,11 @@ class JogDial {
     rotation = {
         current: 0,
         previous: 0
+    };
+
+    angle = {
+        previous : 0,
+        current : 0
     }
 
     pressed = false;
@@ -23,12 +25,9 @@ class JogDial {
     // Predefined options
     defaults = {
         touchMode: 'knob',  // knob | wheel
-        knobSize: '30%',
-        wheelSize: '100%',
-        zIndex: 9999,
-        degreeStartAt: 0,
-        minDegree: null,  // (null) infinity
-        maxDegree: null   // (null) infinity
+        angle: 0,
+        minAngle: null,  // (null) infinity
+        maxAngle: null   // (null) infinity
     };
 
     // Predefined DOM events
@@ -57,7 +56,7 @@ class JogDial {
     };
 
     // Return the sum of rotation value
-    getRotation(quadrant, newDegree) {
+    getRotation(quadrant, newAngle) {
         let rotation;
         let delta = 0;
         if (quadrant === 1 && this.quadrant.previous === 2) { //From 360 to 0
@@ -65,8 +64,8 @@ class JogDial {
         } else if (quadrant === 2 && this.quadrant.previous === 1) { //From 0 to 360
             delta = -360;
         }
-        rotation = newDegree + delta - this.rotation.previous + this.rotation.current;
-        this.rotation.previous = newDegree; // return 0 ~ 360
+        rotation = newAngle + delta - this.rotation.previous + this.rotation.current;
+        this.rotation.previous = newAngle; // return 0 ~ 360
         this.quadrant.previous = quadrant; // return 1 ~ 4
         return rotation;
     };
@@ -89,53 +88,36 @@ class JogDial {
     }
 
     constructor(element, options) {
-        if (element.dataset.isAttachedToJogDialInstance) {
+        if (element.dataset.jogdialIsAttached) {
             console.error('Please Check your code: JogDial can not be initialized twice in a same element.');
             return false;
         }
-
         this.element = element;
-
-        this.element.dataset.isAttachedToJogDialInstance = true;
+        this.element.dataset.jogdialIsAttached = 'true';
         this.options = {...this.defaults, ...options};
-
         this.setupDOM();
-
         this.setupEvents();
-
-        this.angleTo(this.convertClockToUnit(this.options.degreeStartAt));
+        this.angleTo(this.convertClockToUnit(this.options.angle));
     }
 
     set(input){
-        const maxDegree = this.options.maxDegree || 360;
-        const degree = (input > maxDegree) ? maxDegree: input;
-        this.angleTo(this.convertClockToUnit(degree), degree);
+        const maxAngle = this.options.maxAngle || 360;
+        const angle = (input > maxAngle) ? maxAngle: input;
+        this.angleTo(this.convertClockToUnit(angle), angle);
     }
 
     setupDOM() {
+
+
         this.knob = document.createElement('div');
         this.wheel = document.createElement('div');
 
         this.knob.classList.add('knob');
         this.wheel.classList.add('wheel');
 
-        //Set position property as relative if it's not predefined in Stylesheet
-        if (window.getComputedStyle(this.element).getPropertyValue('position') === 'static') {
-            this.element.style.setProperty('position', 'relative');
-        }
 
-        //Append to base and extend {object} item
         this.element.appendChild(this.knob);
         this.element.appendChild(this.wheel);
-
-        //Set global position and size
-        this.knob.style.setProperty('position', 'absolute');
-        this.knob.style.setProperty('width', this.options.knobSize);
-        this.knob.style.setProperty('height', this.options.knobSize);
-
-        this.wheel.style.setProperty('position', 'absolute');
-        this.wheel.style.setProperty('width', this.options.wheelSize);
-        this.wheel.style.setProperty('height', this.options.wheelSize);
 
         //Set radius value
         const KRad = this.knob.clientWidth / 2;
@@ -143,27 +125,18 @@ class JogDial {
 
         //Set knob properties
         this.knob.style.setProperty('margin', -KRad + 'px 0 0 ' + -KRad + 'px');
-        this.knob.style.setProperty('z-index', this.options.zIndex + 1);
 
         const WMargnLT = (this.element.clientWidth - this.wheel.clientWidth) / 2;
         const WMargnTP = (this.element.clientHeight - this.wheel.clientHeight) / 2;
 
-        this.wheel.style.setProperty('left', 0);
-        this.wheel.style.setProperty('top', 0);
         this.wheel.style.setProperty('margin', WMargnTP + 'px 0 0 ' + WMargnLT + 'px');
-        this.wheel.style.setProperty('z-index', this.options.zIndex);
 
         //set radius and center point value
         this.radius = WRad - KRad;
         this.center = {x: WRad + WMargnLT, y: WRad + WMargnTP};
 
         if (this.options.debug) {
-            this.knob.style.setProperty('background-color', '#0000FF');
-            this.knob.style.setProperty('opacity', '0.4');
-            this.knob.style.setProperty('border-radius', '50%');
-            this.wheel.style.setProperty('border-radius', '50%');
-            this.wheel.style.setProperty('background-color', '#00FF00');
-            this.wheel.style.setProperty('opacity', '0.4');
+            this.element.dataset.jogdialDebug = 'true';
         }
     }
 
@@ -214,28 +187,25 @@ class JogDial {
                 const x = offset.x - this.center.x + this.wheel.offsetLeft;
                 const y = offset.y - this.center.y + this.wheel.offsetTop;
 
-                let radian = Math.atan2(y, x) * this.toDeg;
+                let radian = Math.atan2(y, x) * (180 / Math.PI);
                 let quadrant = this.getQuadrant(x, y);
-                let degree = this.convertUnitToClock(radian);
+                let angle = this.convertUnitToClock(radian);
 
                 //Calculate the current rotation value based on pointer offset
-                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, degree);
+                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
                 let rotation = this.rotation.current;
 
-                if (this.options.maxDegree != null && this.options.maxDegree <= rotation) {
-                    rotation = this.options.maxDegree;
+                if (this.options.maxAngle != null && this.options.maxAngle <= rotation) {
+                    rotation = this.options.maxAngle;
                     radian = this.convertClockToUnit(rotation);
-                    degree = this.convertUnitToClock(radian);
-                } else if (this.options.minDegree !== null && this.options.minDegree >= rotation) {
-                    rotation = this.options.minDegree;
+                    angle = this.convertUnitToClock(radian);
+                } else if (this.options.minAngle !== null && this.options.minAngle >= rotation) {
+                    rotation = this.options.minAngle;
                     radian = this.convertClockToUnit(rotation);
-                    degree = this.convertUnitToClock(radian);
+                    angle = this.convertUnitToClock(radian);
                 }
 
-                this.element.dataset.rotation = rotation;
-                this.element.style.setProperty('--rotation',rotation + 'deg');
-                this.element.dataset.degree = degree;
-                this.element.style.setProperty('--degree', degree + 'deg');
+                this.setAttributes(rotation, angle);
 
                 // update angle
                 this.angleTo(radian);
@@ -263,8 +233,8 @@ class JogDial {
 
     };
 
-    angleTo(radian, triggeredDegree = false) {
-        radian *= this.toRad;
+    angleTo(radian, triggeredAngle = false) {
+        radian *= Math.PI / 180;
         const x = Math.cos(radian) * this.radius + this.center.x;
         const y = Math.sin(radian) * this.radius + this.center.y;
         const quadrant = this.getQuadrant(x, y);
@@ -273,22 +243,16 @@ class JogDial {
         this.knob.style.setProperty('top', y + 'px');
 
         if (!this.element.dataset.rotation === undefined) {
-            this.element.dataset.rotation = this.options.degreeStartAt;
-            this.element.style.setProperty('--rotation',this.options.degreeStartAt + 'deg');
-            this.element.dataset.degree = this.convertUnitToClock(radian);
-            this.element.style.setProperty('--degree', this.convertUnitToClock(radian) + 'deg');
+            this.setAttributes(this.options.angle, this.convertUnitToClock(radian));
         }
 
-        if (triggeredDegree) {
+        if (triggeredAngle) {
             this.quadrant.current = quadrant;
             this.quadrant.previous = quadrant;
-            this.rotation.current = triggeredDegree;
-            this.rotation.previous = triggeredDegree % 360;
+            this.rotation.current = triggeredAngle;
+            this.rotation.previous = triggeredAngle % 360;
 
-            this.element.dataset.rotation = triggeredDegree;
-            this.element.style.setProperty('--rotation',triggeredDegree + 'deg');
-            this.element.dataset.degree = triggeredDegree % 360;
-            this.element.style.setProperty('--degree', triggeredDegree % 360 + 'deg');
+            this.setAttributes(triggeredAngle, triggeredAngle % 360);
         }
 
         this.element.dispatchEvent(new CustomEvent('jogdial.update', {
@@ -296,6 +260,19 @@ class JogDial {
         }));
     }
 
+    setAttributes(rotation, angle){
+        this.element.dataset.rotation = rotation;
+        this.element.style.setProperty('--rotation',rotation + 'deg');
+        this.element.dataset.angle = angle;
+        this.element.style.setProperty('--angle', angle + 'deg');
+
+        this.angle.previous = this.angle.current;
+        this.angle.current = angle;
+
+        let progress = (angle / this.options.maxAngle);
+        console.log(angle, this.options.maxAngle, progress);
+
+    }
 }
 
 export { JogDial as default };

@@ -1,5 +1,5 @@
 import pkg from './package.json';
-
+import copy from 'rollup-plugin-copy';
 export default [
     // browser-friendly UMD build
     {
@@ -18,7 +18,14 @@ export default [
             name: 'JogDial',
             file: 'docs/jogdial.js',
             format: 'umd'
-        }
+        },
+        plugins: [
+            copy({
+                targets: [
+                    { src: 'src/JogDial.css', dest: 'docs' }
+                ]
+            })
+        ]
     },
     {
         input: 'src/JogDial.js',

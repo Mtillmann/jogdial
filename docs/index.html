@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="JogDial.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,13 +20,13 @@
     <div class="row">
         <div class="col-12">
 
-        <h1 class="display-1">JogDial.js</h1>
+            <h1 class="display-1">JogDial.js</h1>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-12 col-lg-3">
             <div class="ratio ratio-1x1">
-                <div class="border">
+                <div>
                     <div class="jogdial" id="example1"></div>
                 </div>
             </div>
@@ -33,90 +34,25 @@
             <div class="progress" id="example1_progress" style="height: 25px;">
                 <div class="progress-bar" role="progressbar" style="width: 0%;"></div>
             </div>
-
-
+        </div>
+        <div class="col-12 col-lg-9">
+            <h5 class="display-5">Basic example</h5>
         </div>
     </div>
-
-        <div id="xdials">
-            <div class="xdial">
-                <!--
-                <div id="jog_dial_one"></div>
-                <div id="jog_dial_one_meter">
-                    <div></div>
+    <div class="row mb-3">
+        <div class="col-12 col-lg-3">
+            <div class="ratio ratio-1x1">
+                <div>
+                    <div class="jogdial" id="example2"></div>
                 </div>
-                -->
-            </div>
-            <div class="dial">
-                <div id="jog_dial_two"></div>
-                <p id="jog_dial_two_meter">Debug mode. Infinite loop</p>
             </div>
         </div>
-        <h3 class="inline">Examples</h3>
-        <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-default active" data-dial="0">1</button>
-            <button type="button" class="btn btn-default" data-dial="1">2</button>
-        </div>
-
-        <p class="lead">Spins freely. A JavaScript plugin for jog dial controls.
-        <p>
-        <p><a class="btn btn-lg btn-success" href="https://github.com/ohsiwon/JogDial.js" role="button">Download
-            JogDial.js</a></p>
-        <h6>Build version 1.0</h6>
-    </div>
-
-    <div class="row marketing">
-        <div class="col-lg-8">
-            <h4>Small and standalone</h4>
-            <p>JogDial is 9kb when minified, and it does not require jQuery or other libraries to run the script.</p>
-
-            <h4>Supported browsers and device</h4>
-            <p>JogDial supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of modern browsers include mobile
-                device.</p>
-
-            <h4>Code example</h4>
-            <p class="code_block">JogDial(element, options)<br/>.on( "mousemove", function(event) { alert('You move
-                it!') } );</p>
-            <a href="https://github.com/ohsiwon/JogDial.js">Click here for more details</a>
-        </div>
-
-        <div class="col-lg-4">
-            <h4>Options</h4>
-            <ul>
-                <li>debug {bool}</li>
-                <li>touchMode {string}</li>
-                <li>knobSize {% or px}</li>
-                <li>wheelSize {% or px}</li>
-                <li>zIndex {int}</li>
-                <li>degreeStartAt {int}</li>
-                <li>minDegree {int | null}</li>
-                <li>maxDegree {int | null}</li>
-            </ul>
-
-            <h4>Event list</h4>
-            <ul>
-                <li>mousedown</li>
-                <li>mousemove</li>
-                <li>mouseup</li>
-            </ul>
-
-            <h4>Event data list</h4>
-            <ul>
-                <li>event.target.rotation</li>
-                <li>event.target.degree</li>
-            </ul>
-
-            <h4>Triggering</h4>
-            <p>angle( deg )</p>
+        <div class="col-12 col-lg-9">
+            <h5 class="display-5">Free Rotating</h5>
         </div>
     </div>
 
-    <div class="footer">
-        <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative
-            Commons Attribution 3.0 Unported License.</a></p>
-        <p>&copy; 2014. <a href="http://www.ohsean.net" target="_blank">Sean Oh</a></p>
-    </div>
-
+</div>
 <script src="jogdial.js"></script>
 <script src="init.js"></script>
 

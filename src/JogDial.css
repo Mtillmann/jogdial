@@ -1,0 +1,40 @@
+.jogdial {
+    position: relative !important;
+    width: 100%;
+    height: 100%;
+    --wheelsize: 100%;
+    --knobsize: 30%;
+    --zindex: 9999;
+}
+
+.jogdial .wheel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    --size: var(--wheelsize);
+    width: var(--size);
+    height: var(--size);
+    z-index: var(--zindex);
+}
+
+.jogdial .knob {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: var(--zindex);
+    --size: var(--knobsize);
+    width: var(--size);
+    height: var(--size);
+}
+
+.jogdial[data-jogdial-debug] .knob {
+    background-color: #0000FF;
+    opacity: 0.4;
+    border-radius: 50%;
+}
+
+.jogdial[data-jogdial-debug] .wheel {
+    border-radius: 50%;
+    background-color: #00FF00;
+    opacity: 0.4;
+}
