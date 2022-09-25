@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
 
     // Example 1
     const example1Node = document.getElementById('example1');
@@ -22,7 +22,14 @@ window.addEventListener('load', () => {
         });
 
     example2Node.addEventListener('jogdial.update', e => {
-        document.getElementById('jog_dial_two_meter').textContent = 'Rotation:' + Math.round(e.detail.rotation) + ' / Angle: ' + Math.round(e.detail.degree);
+
+        const debug = Object.fromEntries(
+            Object.entries(e.detail)
+                .filter(item => /angle|rotation|percent|progress/i.test(item[0]))
+                .map(item => [item[0].replace(/^[a-z]+/,'').toLowerCase(), item[1]])
+        );
+        document.getElementById('example2_debug').textContent = JSON.stringify(debug, null, 2);
+        console.log({debug})
     });
 
 });
