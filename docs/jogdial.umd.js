@@ -90,12 +90,17 @@
             this.knob = document.createElement('div');
             this.wheel = document.createElement('div');
 
-            this.knob.classList.add('knob');
             this.wheel.classList.add('wheel');
+            this.knob.classList.add('knob');
 
-
-            this.element.appendChild(this.knob);
             this.element.appendChild(this.wheel);
+            this.element.appendChild(this.knob);
+
+            if(this.options.touchMode === 'wheel'){
+                let foreground = document.createElement('div');
+                foreground.classList.add('foreground');
+                this.element.appendChild(foreground);
+            }
 
             //Set radius value
             const KRad = this.knob.clientWidth / 2;
@@ -164,8 +169,7 @@
             // mouseDragEvent (MOUSE_MOVE)
             const mouseDragEvent = e => {
                 if (this.pressed) {
-                    // Prevent default event
-                    (e.preventDefault) ? e.preventDefault() : e.returnValue = false;
+                    e.preventDefault();
 
                     const offset = this.getCoordinates(e);
                     const x = offset.x - this.center.x + this.wheel.offsetLeft;
@@ -210,10 +214,10 @@
 
 
             // Add events
-            this.addEvent(this.wheel, this.domEvent.MOUSE_DOWN, mouseDownEvent, false);
-            this.addEvent(this.wheel, this.domEvent.MOUSE_MOVE, mouseDragEvent, false);
-            this.addEvent(this.wheel, this.domEvent.MOUSE_UP, mouseUpEvent, false);
-            this.addEvent(this.wheel, this.domEvent.MOUSE_OUT, mouseUpEvent, false);
+            this.addEventListeners(this.element, this.domEvent.MOUSE_DOWN, mouseDownEvent, false);
+            this.addEventListeners(this.element, this.domEvent.MOUSE_MOVE, mouseDragEvent, false);
+            this.addEventListeners(this.element, this.domEvent.MOUSE_UP, mouseUpEvent, false);
+            this.addEventListeners(this.element, this.domEvent.MOUSE_OUT, mouseUpEvent, false);
 
         };
 
@@ -273,7 +277,7 @@
 
         //Calculating x and y coordinates
         getCoordinates(e) {
-            const target = e.target;
+            const target = this.wheel;
             const rect = target.getBoundingClientRect();
             const x = ((this.mobileEvent) ? e.targetTouches[0].clientX : e.clientX) - rect.left;
             const y = ((this.mobileEvent) ? e.targetTouches[0].clientY : e.clientY) - rect.top;
@@ -281,7 +285,7 @@
         };
 
         // Return the current quadrant.
-        // Note: this's Cartesian plane is flipped, hence it's returning reversed value.
+        // Note: Cartesian plane is flipped, hence it's returning reversed value.
         getQuadrant(x, y) {
             if (x > 0 && y > 0) return 4; else if (x < 0 && y > 0) return 3; else if (x < 0 && y < 0) return 2; else if (x >= 0 && y < 0) return 1;
         };
@@ -306,7 +310,7 @@
             return bound.x1 < point.x && bound.x2 > point.x && bound.y1 < point.y && bound.y2 > point.y;
         };
 
-        addEvent(el, type, handler, capture) {
+        addEventListeners(el, type, handler, capture) {
             type.split(' ').forEach(t => el.addEventListener(t, handler, capture));
         };
 
