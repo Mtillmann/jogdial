@@ -20,7 +20,7 @@
 }
 
 #example5 .knob::before{
-    content:"🢁";
+    content:"☝️";
     position: absolute;
     left:50%;
     top:50%;
