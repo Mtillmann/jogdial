@@ -2,10 +2,13 @@ window.addEventListener('load', () => {
 
     // Example 1
     const jogDialOneElement = document.getElementById('jog_dial_one');
-    const jd1 = new JogDial(jogDialOneElement,
-        {wheelSize: '200px', knobSize: '70px', minDegree: 0, maxDegree: 360, degreeStartAt: 0});
-
-    jd1.set(100);
+    new JogDial(jogDialOneElement,
+        {
+            wheelSize: '80%',
+            knobSize: '25%',
+            minDegree: 0,
+            maxDegree: 360, degreeStartAt: 0
+        });
 
     jogDialOneElement.addEventListener('jogdial.update', e => {
         document.querySelector('#jog_dial_one_meter div').style.setProperty('width', Math.round((e.detail.rotation / 360) * 100) + '%')
@@ -16,7 +19,6 @@ window.addEventListener('load', () => {
     const jd2 = new JogDial(jogDialTwoElement,
         {debug: true, wheelSize: '260px', knobSize: '100px', degreeStartAt: 0});
 
-    jd2.set(100);
 
 
     jogDialTwoElement.addEventListener('jogdial.update', e => {
