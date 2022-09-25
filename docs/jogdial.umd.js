@@ -31,9 +31,10 @@
             maxAngle: Infinity,
             attrPrefix: 'jd',
             cssVarPrefix: 'jd',
+            eventPrefix: 'jd',
             bindInput: true,
             roundInputValue: true,
-            input : null
+            input: null
         };
 
         // Predefined DOM events
@@ -118,7 +119,7 @@
 
             if (this.options.input && this.options.bindInput) {
                 this.options.input.addEventListener('input', e => {
-                   this.set(parseInt(e.target.value));
+                    this.set(parseInt(e.target.value));
                 });
             }
         }
@@ -154,7 +155,7 @@
 
                 //Trigger down event
                 if (this.pressed) {
-                    this.element.dispatchEvent(new CustomEvent('jogdial.start', {
+                    this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.start`, {
                         detail: this.element.dataset
                     }));
                 }
@@ -201,7 +202,7 @@
                     this.pressed = false;
 
                     // Trigger up event
-                    this.element.dispatchEvent(new CustomEvent('jogdial.end', {
+                    this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.end`, {
                         detail: this.element.dataset
                     }));
                 }
@@ -238,7 +239,7 @@
                 this.setAttributes(triggeredAngle, triggeredAngle % 360);
             }
 
-            this.element.dispatchEvent(new CustomEvent('jogdial.update', {
+            this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
                 detail: this.element.dataset
             }));
         }
@@ -254,16 +255,16 @@
 
             let percent = (progress * 100) + '%';
             this.element.dataset[this.attrNames.progress] = progress;
-            this.element.style.setProperty('--progress', progress);
+            this.element.style.setProperty(this.cssVarNames.progress, progress);
             this.element.dataset[this.attrNames.percent] = percent;
-            this.element.style.setProperty('--percent', percent);
+            this.element.style.setProperty(this.cssVarNames.percent, percent);
 
             this.element.dataset[this.attrNames.rotation] = rotation;
-            this.element.style.setProperty('--rotation', rotation + 'deg');
+            this.element.style.setProperty(this.cssVarNames.rotation, rotation + 'deg');
             this.element.dataset[this.attrNames.angle] = angle;
-            this.element.style.setProperty('--angle', angle + 'deg');
+            this.element.style.setProperty(this.cssVarNames.angle, angle + 'deg');
 
-            if(this.options.input && this.options.bindInput){
+            if (this.options.input && this.options.bindInput) {
                 this.options.input.value = this.options.roundInputValue ? Math.round(angle) : angle;
             }
 

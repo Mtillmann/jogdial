@@ -28,13 +28,11 @@
 }
 
 .jogdial[data-jd-debug] .knob {
-    background-color: #0000FF;
-    opacity: 0.4;
+    background-color: rgba(0,0,255,0.4);
     border-radius: 50%;
 }
 
 .jogdial[data-jd-debug] .wheel {
     border-radius: 50%;
-    background-color: #00FF00;
-    opacity: 0.4;
+    background-color: rgba(0,255,0,0.4);
 }

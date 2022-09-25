@@ -16,7 +16,7 @@ export default [
         output: {
             exports : 'default',
             name: 'JogDial',
-            file: 'docs/jogdial.js',
+            file: 'docs/jogdial.umd.js',
             format: 'umd'
         },
         plugins: [
