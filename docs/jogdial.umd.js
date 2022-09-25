@@ -24,6 +24,7 @@
 
         // Predefined options
         defaults = {
+            debug: false,
             mode: 'knob',
             angle: 0,
             minAngle: -Infinity,
@@ -32,7 +33,8 @@
             cssVarPrefix: 'jd',
             eventPrefix: 'jd',
             roundInputValue: true,
-            input: null
+            input: null,
+            roundStateValues : false
         };
 
         // Predefined DOM events
@@ -94,7 +96,7 @@
             this.element.appendChild(this.wheel);
             this.element.appendChild(this.knob);
 
-            if(this.options.mode === 'wheel'){
+            if (this.options.mode === 'wheel') {
                 let foreground = document.createElement('div');
                 foreground.classList.add('foreground');
                 this.element.appendChild(foreground);
@@ -159,7 +161,7 @@
                 //Trigger down event
                 if (this.pressed) {
                     this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.start`, {
-                        detail: this.element.dataset
+                        detail: this.getState()
                     }));
                 }
             };
@@ -198,14 +200,11 @@
                 }
             };
 
-            // mouseDragEvent (MOUSE_UP, MOUSE_OUT)
             const mouseUpEvent = () => {
                 if (this.pressed) {
                     this.pressed = false;
-
-                    // Trigger up event
                     this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.end`, {
-                        detail: this.element.dataset
+                        detail: this.getState()
                     }));
                 }
             };
@@ -242,13 +241,17 @@
             }
 
             this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
-                detail: {
-                    rotation : parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
-                    progress : parseFloat(this.element.dataset[this.attrNames.progress] || 0),
-                    angle : parseFloat(this.element.dataset[this.attrNames.angle] || 0),
-                    percent : this.element.dataset[this.attrNames.percent] || '0%',
-                }
+                detail: this.getState()
             }));
+        }
+
+        getState() {
+            return {
+                rotation : parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
+                progress: parseFloat(this.element.dataset[this.attrNames.progress] || 0),
+                angle : parseFloat(this.element.dataset[this.attrNames.angle] || 0),
+                percent: this.element.dataset[this.attrNames.percent] || '0%',
+            }
         }
 
         setAttributes(rotation, angle) {
@@ -261,6 +264,13 @@
             }
 
             let percent = (progress * 100) + '%';
+
+            if(this.options.roundStateValues){
+                percent = Math.round(progress * 100) + '%';
+                rotation = Math.round(rotation);
+                angle = Math.round(angle);
+            }
+
             this.element.dataset[this.attrNames.progress] = progress;
             this.element.style.setProperty(this.cssVarNames.progress, progress);
             this.element.dataset[this.attrNames.percent] = percent;

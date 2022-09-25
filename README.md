@@ -1,93 +1,138 @@
-# JogDial.js
+# JogDial.js 2.0
 
-## A JavaScript lib for jog dial controls.
-JogDial is a simple JavaScript plugin that help you to create dial style controller easily on the webpage.
+Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with the following changes:
 
-## Supported browsers and device
-JogDial supports Chrome, Safari, FireFox, Internet Explorer 7+ and most of modern browsers include mobile device.
+* rewritten using es6 classes
+* dropped support for obsolete devices
+* removed deprecated features and apis, duplicate/dead code
+* removed options in favor of CSS properties and vars
+* improved events, DOM and default styles
+* exposes internal state through data-attr and css-vars
+* provides ESM, CJS and UMD builds
+* simple input binding
+* improved examples
+* about 2KiB minified and zipped
 
-## Features
-* Improved DOM and CSS features
-* Refactored using ES& classes
-* Does not require any other JavaScript library like jQuery.
-* Cross-browser support (~~IE7+~~)
-* Multi-touch support (you can control multiple number of JogDial elements at once in touch screen) 
-* Custom Events
-* UMD, CJS and ESM Builds
+## Examples
 
-## Demo
-[Click here](https://mtillmann.github.io/jogdial/)
+[Click here for some examples](https://mtillmann.github.io/JogDial.js/)
+
+## Installation
+
+`npm install Mtillmann/JogDial.js --save`
+
+Use the `dist/jogdial.umd.min.js` for browser inclusion, otherwise pick the file best suited for your module system.
+Don't forget to include `dist/jogdial.css`.
 
 ## Usage
 
-### Basics
-Here is a basic example of JogDial.js initialization. This will start the JogDial in debug mode.
+Create the
+markup, [make sure that the box your instance will live inside is square](https://stackoverflow.com/a/28985475/8797350):
 
-You must create the target element for the JogDial and set up the width and height property before the code start.
+```html5
+<div class="your-square-box">
+    <div class="jogdial" id="my-jogdial-instance"></div>
+</div>
+```
 
-    var el = document.getElementById('your_element');
-    var dial = new JogDial(el, {debug: true});
-    
-You can change the setting by passing an options-object in second argument.
+Next, create a JogDial instance:
 
-    var options = {debug: true, wheelSize: 90%, knobSize: 50%, minDegree: 0};
-    var dial = new JogDial(el, options);
-    
-### Styling
-The easiest way to style the JogDial is adding background image to your target element and knob element created from JogDial script.
-
-The wheel and knob DOM nodes created, each have a class describing its function: 
-
-    #dial {
-        width: 200px;
-        height: 200px;
-    }
-    
-    #dial .knob {
-        // This is your knob style
-    }
-    
-You can add any additional elements inside of your target element and it won't interfere the JogDial function.
-
-Additionally, the current `degree` (angle 0-360) and `rotation` is written as data-attributes and css-variables on the main jogdial-element.
+```ecmascript 6
+const element = document.getElementById('my-jogdial-instance');
+const myJogDialInstance = new JogDial(element, {});
+```
 
 ### Options
+
 Here is a list of options can be used on JogDial.
 
-Options              | Descriptions                                                     | Default         
-:------------------- |:-----------------------------------------------------------------|:---------------
-debug `bool`         | Show debug overlay on the top of screen                          |false           |
-touchMode `string`   | Set the active touch area of JogDial control. 'knob' or 'wheel'  |knob            |
-knobSize `int`       | Set the diameter of knob in percentage or pixel                  |30%             |
-wheelSize `int`      | Set the diameter of wheel in percentage or pixel                 |100%            |
-zIndex `int`         | Set the z-index of JogDial                                       |9999            |
-degreeStartAt `int`  | Set the degree of wheel at start                                 |0               |
-minDegree `int`      | Set the minimum degree of wheel rotation                         |null (infinite) |
-maxDegree `int`      | Set the maximum degree of wheel rotation                         |null (infinite) |
+| Options                  | Descriptions                                                        | Default   |
+|:-------------------------|:--------------------------------------------------------------------|:----------|
+| debug `bool`             | Adds default styling on the instance                                | false     |
+| mode `string`            | Set the active touch area of JogDial control. 'knob' or 'wheel'     | knob      |
+| ~~knobSize~~ `int`       | see below...                                                        |           |
+| ~~wheelSize~~ `int`      | see below...                                                        |           |
+| angle `int`              | Set the angle of wheel at start                                     | 0         |
+| minAngle `int`           | Set the minimum angle of wheel rotation                             | -Infinity |
+| maxAngle `int`           | Set the maximum angle of wheel rotation                             | Infinity  |
+| attrPrefix `string`      | prefix for the data-attributes                                      | jd        |
+| cssVarPrefix `string`    | prefix for the CSS-variables                                        | jd        |
+| eventPrefix `string`     | prefix for the custom events                                        | jd        |
+| roundInputValue `bool`   | When set, input values will be rounded                              | true      |
+| input `HTMLInputElement` | input-element to bind the dial to                                   | null      |
+| roundStateValues `bool`  | When set, the state values propagated to dom and events are rounded | false     |
+
+### CSS Options
+
+Deprecated options `knobSize` and `wheelSize` are now set via CSS vars since they were never actually used in javascript code:
+
+```css
+#my-jogdial-instance{
+    --wheelsize: 100%;
+    --knobsize: 30%;
+}
+
+/* the values above are used in the actual default styles like this: */
+
+.jogdial .wheel {
+    /* ... */
+    --size: var(--wheelsize);
+    width: var(--size);
+    height: var(--size);
+}
+```
 
 ### Events
+
 Events are attached to the main jogdial element:
-    
-    
-    el.addEventListener("jogdial.start", event => { console.log(event.detail.rotation); });
-    
+```ecmascript 6
+element.addEventListener("jd.start", event => { console.log(event.detail); });
+```
 
-#### Event list
-* jogdial.start
-* jogdial.update
-* jogdial.end
+Event payload inside the `event.detail` always looks like this:
 
-#### Event Data list from callback
-    event.detail.rotation  {number}     total sum of rotated degree from the start.
-    event.detail.degree    {number}     Current degree of circle in clock angle.
-    
-#### Triggering
-You can change the angle of JogDial element by passing the number value to the `angle` method.
+```json5
+{
+  "rotation": 123,
+  "progress": 0.3416666666666667,
+  "angle": 123,
+  "percent": "34.166666666666664%"
+}
+```
+Available Events are: `$PREFIX.start`, `$PREFIX.update` and `$PREFIX.end` where `$PREFIX` is `options.eventPrefix`.
 
-    var dial = new JogDial(el, {debug: true});
-    dial.set(45); 
-    // This will change the JogDial degree to 45.
-    
-    
+### Exposed state
+
+Primarily to enable usage in CSS, the state of the instance is exposed css-vars inside a style-attribute and data-attributes on the instance's element. After an update of the instance, the associated element's DOM will look like this:
+
+```html
+<div class="jogdial" id="my-jogdial-instance" 
+     data-jd-is-attached="true" 
+     data-jd-progress="0.3910449178663543" 
+     data-jd-percent="39.10449178663543%"
+     data-jd-rotation="140.77617043188755"
+     data-jd-angle="140.77617043188755"
+     style="
+        --jd-progress:0.391045; 
+        --jd-percent:39.1045%; 
+        --jd-rotation:140.776deg; 
+        --jd-angle:140.776deg;
+    ">
+    ...
+</div>
+```
+
+This way you can easily write the current state of the dial into a pseudo element or use it to calculate rotation on the
+knob etc (see examples...). Set `options.roundStateValues = true` for rounded values.
+
+### Setting the angle
+
+You can change the angle of JogDial element by calling the `set` method.
+
+```ecmascript 6
+myJogDialInstance.set(55);
+```
+
 ## Copyright
+
 Licensed under the MIT license 

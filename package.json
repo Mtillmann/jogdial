@@ -1,7 +1,7 @@
 {
-  "name": "jogdial",
+  "name": "JogDial.js",
   "version": "2.0.0",
-  "description": "JogDial is a simple JavaScript plugin that help you to create dial style controller easily on the webpage.",
+  "description": "Simple lib to create dial controls",
   "main": "dist/jogdial.cjs.js",
   "module": "dist/jogdial.esm.js",
   "browser": "dist/jogdial.umd.js",
