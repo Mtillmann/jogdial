@@ -30,7 +30,7 @@ class JogDial {
         eventPrefix: 'jd',
         roundInputValue: true,
         input: null,
-        roundStateValues : false
+        roundStateValues: false
     };
 
     // Predefined DOM events
@@ -73,7 +73,7 @@ class JogDial {
 
         this.setupDOM();
         this.setupEvents();
-        this.angleTo(this.convertClockToUnit(this.options.angle));
+        this.angleTo(this.convertClockToUnit(this.options.angle), this.options.angle, false);
     }
 
     /**
@@ -166,7 +166,7 @@ class JogDial {
                 this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.start`, {
                     detail: this.getState()
                 }));
-            }else {
+            } else {
                 delete this.element.dataset[this.attrNames.pressed];
             }
         };
@@ -252,7 +252,7 @@ class JogDial {
             this.setAttributes(triggeredAngle, triggeredAngle % 360);
         }
 
-        if(emitEvent){
+        if (emitEvent) {
             this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
                 detail: this.getState()
             }));
@@ -265,9 +265,9 @@ class JogDial {
      */
     getState() {
         return {
-            rotation : parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
+            rotation: parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
             progress: parseFloat(this.element.dataset[this.attrNames.progress] || 0),
-            angle : parseFloat(this.element.dataset[this.attrNames.angle] || 0),
+            angle: parseFloat(this.element.dataset[this.attrNames.angle] || 0),
             percent: this.element.dataset[this.attrNames.percent] || '0%',
         }
     }
@@ -288,7 +288,7 @@ class JogDial {
 
         let percent = (progress * 100) + '%';
 
-        if(this.options.roundStateValues){
+        if (this.options.roundStateValues) {
             percent = Math.round(progress * 100) + '%';
             rotation = Math.round(rotation);
             angle = Math.round(angle);
