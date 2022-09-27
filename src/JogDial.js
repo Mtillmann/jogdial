@@ -51,6 +51,7 @@ export default class JogDial {
             rotation: `${options.attrPrefix}Rotation`,
             progress: `${options.attrPrefix}Progress`,
             percent: `${options.attrPrefix}Percent`,
+            pressed: `${options.attrPrefix}Pressed`,
         };
 
         this.cssVarNames = {
@@ -73,10 +74,15 @@ export default class JogDial {
         this.angleTo(this.convertClockToUnit(this.options.angle));
     }
 
-    set(input) {
+    /**
+     *
+     * @param input
+     * @param emitEvent
+     */
+    set(input, emitEvent = true) {
         const maxAngle = this.options.maxAngle || 360;
         const angle = (input > maxAngle) ? maxAngle : input;
-        this.angleTo(this.convertClockToUnit(angle), angle);
+        this.angleTo(this.convertClockToUnit(angle), angle, emitEvent);
     }
 
     setupDOM() {
@@ -154,9 +160,12 @@ export default class JogDial {
 
             //Trigger down event
             if (this.pressed) {
+                this.element.dataset[this.attrNames.pressed] = this.options.mode;
                 this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.start`, {
                     detail: this.getState()
                 }))
+            }else{
+                delete this.element.dataset[this.attrNames.pressed];
             }
         };
 
@@ -197,6 +206,7 @@ export default class JogDial {
         const mouseUpEvent = () => {
             if (this.pressed) {
                 this.pressed = false;
+                delete this.element.dataset[this.attrNames.pressed];
                 this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.end`, {
                     detail: this.getState()
                 }))
@@ -212,7 +222,13 @@ export default class JogDial {
 
     };
 
-    angleTo(radian, triggeredAngle = false) {
+    /**
+     *
+     * @param radian
+     * @param triggeredAngle
+     * @param emitEvent
+     */
+    angleTo(radian, triggeredAngle = false, emitEvent = true) {
         radian *= Math.PI / 180;
         const x = Math.cos(radian) * this.radius + this.center.x;
         const y = Math.sin(radian) * this.radius + this.center.y;
@@ -234,11 +250,17 @@ export default class JogDial {
             this.setAttributes(triggeredAngle, triggeredAngle % 360);
         }
 
-        this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
-            detail: this.getState()
-        }));
+        if(emitEvent){
+            this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.update`, {
+                detail: this.getState()
+            }));
+        }
     }
 
+    /**
+     *
+     * @returns {{rotation: number, progress: number, angle: number, percent: (*|string)}}
+     */
     getState() {
         return {
             rotation : parseFloat(this.element.dataset[this.attrNames.rotation] || 0),
@@ -248,6 +270,11 @@ export default class JogDial {
         }
     }
 
+    /**
+     *
+     * @param rotation
+     * @param angle
+     */
     setAttributes(rotation, angle) {
 
         let progress;

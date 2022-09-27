@@ -20,7 +20,7 @@
     <div class="row mb-4">
         <div class="col-12">
 
-            <h1 class="display-1">JogDial.js Examples</h1>
+            <h1 class="display-1">JogDial.js 2.0 Examples</h1>
         </div>
     </div>
     <div class="row mb-3">
@@ -38,15 +38,18 @@
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Basic example</h5>
             <p>This example shows a basic dial control using Sean's original bitmap backgrounds.
-            The dial is controlled by moving the knob.
+                The dial is controlled by moving the knob.
             </p>
 
             <p>Note: The background image is actually attached to the <code>.dial</code>-element because the
-                <code>.wheel</code>-element is smaller than the <code>.dial</code>-element to allow for a smaller turn radius of the <code>.knob</code>-element</code></p>
+                <code>.wheel</code>-element is smaller than the <code>.dial</code>-element to allow for a smaller turn
+                radius of the <code>.knob</code>-element</code></p>
 
-            <p>The progress bar below the dial is update by attaching an <code>update</code>-event listener to <code>#example1</code>.</p>
+            <p>The progress bar below the dial is update by attaching an <code>update</code>-event listener to <code>#example1</code>.
+            </p>
 
-            <p>The actual sizing for all examples on this page is achieved using bootstrap's grid and aspect ratio utils.</p>
+            <p>The actual sizing for all examples on this page is achieved using bootstrap's grid and aspect ratio
+                utils.</p>
 
         </div>
     </div>
@@ -63,14 +66,16 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Free Rotating</h5>
-            <p>This example's dial is not locked to a range of angles like the first example. You can spin the dial beyond 360 degrees and the angle will start with 0 again.</p>
+            <p>This example's dial is not locked to a range of angles like the first example. You can spin the dial
+                beyond 360 degrees and the angle will start with 0 again.</p>
 
             <p>The example uses the debug option, which simply activates some
-            default styling for the dial and knob.</p>
+                default styling for the dial and knob.</p>
 
             <p>
                 In the <code>&lt;code&gt;</code>-block below the dial, a dump of
-                the event listeners <code>e.detail</code> is displayed. Observe how the rotation and angle values differ.
+                the event listeners <code>e.detail</code> is displayed. Observe how the rotation and angle values
+                differ.
             </p>
 
         </div>
@@ -86,9 +91,12 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Control using the wheel</h5>
-            <p>While in the examples above, <code>options.mode</code> is set to <code>knob</code>, in this example it's set to <code>wheel</code>. This means you can manipulate the dial by touching it anywhere.</p>
+            <p>While in the examples above, <code>options.mode</code> is set to <code>knob</code>, in this example it's
+                set to <code>wheel</code>. This means you can manipulate the dial by touching it anywhere.</p>
 
-            <p>Note: when the mode is set to wheel, <code>div.foreground</code> is appended to the <code>.dial</code>-element to prevent unexpected behaviour when moving the pointer from <code>.knob</code> to <code>.wheel</code> etc</p>
+            <p>Note: when the mode is set to wheel, <code>div.foreground</code> is appended to the <code>.dial</code>-element
+                to prevent unexpected behaviour when moving the pointer from <code>.knob</code> to <code>.wheel</code>
+                etc</p>
         </div>
     </div>
 
@@ -104,11 +112,14 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Binding inputs</h5>
-            <p>To make the whole project a little more useful, here's an example of how to two-way-bind an input to the dial.</p>
+            <p>To make the whole project a little more useful, here's an example of how to two-way-bind an input to the
+                dial.</p>
 
-            <p>The input is passed as <code>options.input</code> to the constructor. Set <code>options.roundInputValue</code> to <code>false</code> to receive the raw angle value.</p>
+            <p>The input is passed as <code>options.input</code> to the constructor. Set
+                <code>options.roundInputValue</code> to <code>false</code> to receive the raw angle value.</p>
 
-            <p>Note: if you want to update the input's value programmatically, rather use the <code>yourJogDialInstance.set</code>-method, which will update the input's value in turn.</p>
+            <p>Note: if you want to update the input's value programmatically, rather use the <code>yourJogDialInstance.set</code>-method,
+                which will update the input's value in turn.</p>
         </div>
     </div>
 
@@ -123,8 +134,110 @@
         </div>
         <div class="col-12 col-lg-9">
             <h5 class="display-5">Rotating Controls</h5>
-            <p>Since all relevant state is exposed as data-attributes and css-variables on the instance's element, it's trivial to use the angle css-var and rotate the <code>.knob</code> according to the
-            current angle of the dial.</p>
+            <p>Since all relevant state is exposed as data-attributes and css-variables on the instance's element, it's
+                trivial to use the angle css-var and rotate the <code>.knob</code> according to the
+                current angle of the dial.</p>
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-12 col-lg-3">
+            <div class="ratio ratio-1x1">
+                <div>
+                    <div class="jogdial" id="example6">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <h5 class="display-5">Using Data Attributes</h5>
+            <p>Pseudo-elements and data-attributes can be used to display the state of the instance. This works only
+                with element passed to the <code>JogDial</code>-constructor, not any of the descendents.</p>
+            <p>Note: <code>options.roundStateValues</code> was used to get a rounded degree value.</p>
+        </div>
+    </div>
+
+
+    <div class="row mb-3 hover-examples">
+        <div class="col-12 col-lg-3">
+            <div class="ratio ratio-1x1">
+                <div>
+                    <div class="container">
+                        <div class="row g-0">
+                            <div class="col-6">
+                                <div class="ratio ratio-1x1">
+                                    <div class="p-1">
+
+                                        <div id="example7" class="jogdial" data-mode="knob"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ratio ratio-1x1">
+                                    <div class="p-1">
+
+                                        <div id="example8" class="jogdial" data-mode="knob"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ratio ratio-1x1">
+                                    <div class="p-1">
+
+                                        <div id="example9" class="jogdial" data-mode="wheel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ratio ratio-1x1">
+                                    <div class="p-1">
+
+                                        <div id="example10" class="jogdial" data-mode="wheel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <h5 class="display-5">Styling</h5>
+            <p>
+                Interactive styles can be applied by using standard hover pseudo classes and the
+                data-*-pressed-attribute.
+            </p>
+
+            <p>
+                <strong>fig. 0</strong>: <code>.wheel</code> and <code>.knob</code> have individual hover pseudo classes
+                and <code>.knob</code> also uses the <code>pressed</code>-attribute when it is being manipulated.
+                Note how the <code>.wheel</code> loses its outline when the hover reaches the <code>.knob</code>.
+                The dial uses <code>options.mode = 'knob'</code>.
+            </p>
+
+            <p>
+                <strong>fig. 1</strong>: <code>.wheel</code> and <code>.knob</code> state's are styled by using a hover
+                pseudo class on the main <code>.dial</code>. Both receive a different style when the pointer is pressed
+                on the <code>.knob</code>.
+                The <code>.wheel</code> keeps its styling even when the pointer hovers over the <code>.knob</code>.
+                The dial uses <code>options.mode = 'knob'</code>.
+            </p>
+
+            <p>
+                <strong>fig. 2</strong>: Identical to <strong>fig. 1</strong>.
+                The difference is that <code>pressed</code> is applied by clicking anywhere on the dial.
+                Individual hover/pressed styles for <code>.wheel</code> and <code>.knob</code> are not possible due to the <code>.foreground</code>-div
+                capturing all pointer input.
+
+                This is caused by the dial using <code>options.mode = 'wheel'</code>.
+            </p>
+
+            <p>
+                <strong>fig. 3</strong>: Only the <code>.knob</code> has distinct hover/pressed style, but the states are triggered
+                by pointing/clicking anywhere on the dial. Again, this is due to the fact that the dial uses <code>options.mode = 'wheel'</code>.
+            </p>
+
         </div>
     </div>
 

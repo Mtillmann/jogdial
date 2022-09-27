@@ -32,3 +32,87 @@
     text-align: center;
     transform: translate(-50%, -50%) rotate(var(--jd-angle, 0deg));
 }
+
+#example6::before {
+    content:attr(data-jd-angle) '° / ' attr(data-jd-percent);
+    position:absolute;
+    transform: translate(-50%, -50%);
+    left:50%;
+    top:50%;
+    z-index:128;
+}
+
+
+/* styling examples */
+
+.hover-examples{
+    --wheel-hover-outline:1px dashed #000;
+    --knob-hover-outline:1px dashed #000;
+    --wheel-pressed-outline:3px dashed #000;
+    --knob-pressed-outline:3px dashed #000;
+}
+
+.hover-examples .jogdial::after{
+    content:'fig. ' attr(data-index);
+    font-style: italic;
+    position:absolute;
+    transform: translate(-50%, -50%);
+    font-family: serif;
+    left:50%;
+    top:50%;
+    z-index:1;
+}
+
+
+#example7 .knob:hover{
+    outline:var(--knob-hover-outline);
+}
+
+#example7 .wheel:hover{
+    outline:var(--wheel-hover-outline);
+}
+
+#example7[data-jd-pressed] .knob:hover{
+    outline:var(--knob-pressed-outline);
+}
+
+#example8:hover .wheel{
+    outline:var(--wheel-hover-outline);
+}
+
+#example8:hover .knob{
+    outline:var(--knob-hover-outline);
+}
+
+#example8[data-jd-pressed]:hover .knob{
+    outline:var(--knob-pressed-outline);
+}
+
+#example8[data-jd-pressed]:hover .wheel{
+    outline:var(--wheel-pressed-outline);
+}
+
+
+#example9:hover .wheel{
+    outline:var(--wheel-hover-outline);
+}
+
+#example9:hover .knob{
+    outline:var(--knob-hover-outline);
+}
+
+#example9[data-jd-pressed]:hover .knob{
+    outline:var(--knob-pressed-outline);
+}
+
+#example9[data-jd-pressed]:hover .wheel{
+    outline:var(--wheel-pressed-outline);
+}
+
+#example10:hover .knob{
+    outline:var(--knob-hover-outline);
+}
+
+#example10[data-jd-pressed]:hover .knob{
+    outline:var(--knob-pressed-outline);
+}

@@ -122,8 +122,10 @@ Primarily to enable usage in CSS, the state of the instance is exposed css-vars 
 </div>
 ```
 
-This way you can easily write the current state of the dial into a pseudo element or use it to calculate rotation on the
-knob etc (see examples...). Set `options.roundStateValues = true` for rounded values.
+This way you can easily write the current state of the dial into a pseudo-element or use it to calculate rotation on the
+knob etc (see examples...). Set `options.roundStateValues = true` for rounded values. 
+
+Additionally, there's the `data-$PREFIX-pressed`-attribute, only present when the pointer is down. It can be used as an alternative for the `:active`-pseudo class.
 
 ### Setting the angle
 
@@ -132,6 +134,8 @@ You can change the angle of JogDial element by calling the `set` method.
 ```ecmascript 6
 myJogDialInstance.set(55);
 ```
+
+Pass an optional second argument `false` to prevent `update`-events from being fired.
 
 ## Copyright
 

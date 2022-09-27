@@ -42,4 +42,30 @@ window.addEventListener('DOMContentLoaded', () => {
     // Example 5
     new JogDial(document.getElementById('example5'), {mode: 'wheel'});
 
+    // Example 6
+    new JogDial(document.getElementById('example6'), {debug: true, mode: 'wheel', roundStateValues: true});
+
+    // hover examples
+
+
+    let hoverInstances = [];
+
+    hoverInstances = Array.from(document.querySelectorAll('.hover-examples .jogdial')).map((node, index) => {
+        node.dataset.index = index;
+
+        node.addEventListener('jd.update', e => {
+            hoverInstances.forEach((instance, index) => {
+                if(parseInt(e.target.dataset.index) !== index){
+                    instance.set(e.detail.angle, false);
+                }
+            })
+        });
+        return new JogDial(node, { debug : true, mode : node.dataset.mode, });
+    })
+
+
+    document.querySelector('.hover-examples').addEventListener('jd.update', e => {
+        console.log(e);
+    });
+
 });
