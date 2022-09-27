@@ -46,6 +46,13 @@ class JogDial {
         options = {...this.defaults, ...options};
         this.options = options;
 
+        ['angle', 'minAngle', 'maxAngle'].forEach(key => {
+            if(typeof this.options[key] === 'string'){
+                this.options[key] = parseFloat(this.options[key]);
+            }
+        });
+
+
         this.attrNames = {
             attached: `${options.attrPrefix}IsAttached`,
             debug: `${options.attrPrefix}Debug`,
