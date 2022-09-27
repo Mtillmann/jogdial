@@ -84,11 +84,11 @@
     outline:var(--knob-hover-outline);
 }
 
-#example8[data-jd-pressed]:hover .knob{
+#example8[data-jd-pressed] .knob{
     outline:var(--knob-pressed-outline);
 }
 
-#example8[data-jd-pressed]:hover .wheel{
+#example8[data-jd-pressed] .wheel{
     outline:var(--wheel-pressed-outline);
 }
 
@@ -101,11 +101,11 @@
     outline:var(--knob-hover-outline);
 }
 
-#example9[data-jd-pressed]:hover .knob{
+#example9[data-jd-pressed] .knob{
     outline:var(--knob-pressed-outline);
 }
 
-#example9[data-jd-pressed]:hover .wheel{
+#example9[data-jd-pressed] .wheel{
     outline:var(--wheel-pressed-outline);
 }
 
@@ -113,6 +113,6 @@
     outline:var(--knob-hover-outline);
 }
 
-#example10[data-jd-pressed]:hover .knob{
+#example10[data-jd-pressed] .knob{
     outline:var(--knob-pressed-outline);
 }
