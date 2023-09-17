@@ -1,5 +1,5 @@
 {
-  "name": "JogDial.js",
+  "name": "jogdial",
   "version": "2.0.0",
   "description": "Simple lib to create dial controls",
   "main": "dist/jogdial.cjs.js",
@@ -10,9 +10,9 @@
     "dev": "rollup -c -w"
   },
   "devDependencies": {
-    "rollup": "^2.79.1",
-    "rollup-plugin-copy": "^3.4.0",
-    "terser": "^5.15.0"
+    "rollup": "^3.29.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "terser": "^5.19.4"
   },
   "repository": {
     "type": "git",
