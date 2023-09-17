@@ -1,4 +1,4 @@
-# JogDial.js 2.1.0
+# jogdial 2.1.0
 
 Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with the following changes:
 
@@ -15,11 +15,11 @@ Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with t
 
 ## Examples
 
-[Click here for some examples](https://mtillmann.github.io/JogDial.js/)
+[Click here for some examples](https://mtillmann.github.io/jogdial/)
 
 ## Installation
 
-`npm install Mtillmann/JogDial.js --save`
+`npm install Mtillmann/jogdial --save`
 
 Use the `dist/jogdial.umd.min.js` for browser inclusion, otherwise pick the file best suited for your module system.
 Don't forget to include `dist/jogdial.css`.
