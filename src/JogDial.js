@@ -222,25 +222,36 @@ export default class JogDial {
 
 
 
-
-
-
-                //actualAngle -= this.wheelTouchOffset;
-
                 let angle = this.normalizeAngle(actualAngle);
-                let quadrant = this.getQuadrant(x, y);
+                this.rotation.current = this.COMBINEDCALCULATION(angle);
 
-                //Calculate the current rotation value based on pointer offset
-                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
-                let rotation = this.rotation.current;
+                //let rotation = this.rotation.current;
 
-                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
+                //({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
 
-                this.setAttributes(rotation, angle);
-                this.angleTo(actualAngle);
+                //this.setAttributes(rotation, angle);
+                //this.angleTo(actualAngle);
 
 
-                this.sampleInput();
+                //this.sampleInput();
+
+
+                /*
+                                let angle = this.normalizeAngle(actualAngle);
+                                let quadrant = this.getQuadrant(x, y);
+                
+                                //Calculate the current rotation value based on pointer offset
+                                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
+                                let rotation = this.rotation.current;
+                
+                                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
+                
+                                this.setAttributes(rotation, angle);
+                                this.angleTo(actualAngle);
+                
+                
+                                this.sampleInput();
+                                */
             }
         };
 
@@ -273,21 +284,26 @@ export default class JogDial {
             let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
 
             this.rotation.current = this.COMBINEDCALCULATION(angle);
+
+            /*
             let actualAngle = this.enforceRotation(angle - 90);
 
+
             let rotation = this.enforceRotation(this.rotation.current + delta);
+*/
+           // ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
 
-            ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
-
+           /*
             angle = this.enforceAngleBounds(angle);
             this.setAttributes(rotation, angle);
             this.angleTo(actualAngle);
-            
+
             this.sampleInput();
+            */
             this.mouseWheelEndTimeout = setTimeout(() => {
                 this.applyMomentum();
             }, 100);
-            
+
         };
 
 
@@ -307,7 +323,7 @@ export default class JogDial {
 
     COMBINEDCALCULATION(angle) {
 
-        
+
         let rotation;
         let delta = 0;
 
@@ -326,6 +342,22 @@ export default class JogDial {
         rotation = angle + delta - this.rotation.previous + this.rotation.current;
         this.rotation.previous = angle; //  0 ~ 360
         this.quadrant.previous = quadrant; //  1 ~ 4
+
+        //when there is no more inifite rotation, this wont work
+        /*
+        if (this.options.maxAngle !== Infinity && this.options.maxAngle <= rotation) {
+            rotation = this.options.maxAngle;
+            
+        } else if (this.options.minAngle !== -Infinity && this.options.minAngle >= rotation) {
+            rotation = this.options.minAngle;  
+        }
+*/
+
+                this.setAttributes(angle, angle);
+                this.angleTo(angle - 90);
+
+
+                this.sampleInput();
 
         return this.enforceRotation(rotation);
     }
