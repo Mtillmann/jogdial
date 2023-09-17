@@ -21,7 +21,7 @@ class JogDial {
     // Predefined options
     defaults = {
         debug: false,
-        mode: 'knob',
+        mode: 'wheel',
         wheelSnap: false,
         angle: 0,
         minAngle: -Infinity,
@@ -206,15 +206,18 @@ class JogDial {
                 let x = offset.x - this.center.x + this.wheel.offsetLeft;
                 let y = offset.y - this.center.y + this.wheel.offsetTop;
 
+
+                console.log({ x, y });
+
                 if (this.setWheelTouchOffset && !this.options.wheelSnap) {
 
                     const actualAngle = Math.atan2(y, x) * (180 / Math.PI);
 
                     const currentAngle = this.rotationToNativeAngle(this.rotation.current);
                     this.wheelTouchOffset = (actualAngle - currentAngle) % 360;
-                    
 
-                
+
+
 
                     this.setWheelTouchOffset = false;
 
@@ -224,7 +227,7 @@ class JogDial {
 
                 let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
 
-                if(this.wheelTouchOffset){
+                if (this.wheelTouchOffset) {
                     actualAngle -= this.wheelTouchOffset;
                     /*
                     //rotate x and y by wheelTouchOffset
@@ -234,12 +237,12 @@ class JogDial {
                     x = x * cos - y * sin;
                     y = x * sin + y * cos;
 */
-                    
+
                 }
 
 
-                
-                
+
+
 
 
 
@@ -255,7 +258,7 @@ class JogDial {
 
                 this.setAttributes(rotation, angle);
                 this.angleTo(actualAngle);
-                
+
 
                 this.sampleInput();
             }
@@ -290,8 +293,20 @@ class JogDial {
             let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
             let actualAngle = this.enforceRotation(angle - 90);
 
-        
+
+
+
+
             let rotation = this.enforceRotation(this.rotation.current + delta);
+
+
+            const radians = rotation * (Math.PI / 180);
+            const x = -this.radius * Math.sin(radians);
+            const y = -this.radius * Math.cos(radians);
+            let quadrant = this.getQuadrant(x, y);
+
+            //Calculate the current rotation value based on pointer offset
+            this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
  ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
 
             this.rotation.current = rotation;
@@ -302,7 +317,7 @@ class JogDial {
 
             this.sampleInput();
 
-            
+
             this.mouseWheelEndTimeout = setTimeout(() => {
                 this.applyMomentum();
             }, 100);
@@ -509,12 +524,12 @@ class JogDial {
     };
 
 
-    enforceRotation(rotation){
+    enforceRotation(rotation) {
         rotation = rotation % 360;
-        if(rotation < 0){
+        if (rotation < 0) {
             rotation += 360;
         }
-        if(rotation > 360){
+        if (rotation > 360) {
             rotation -= 360;
         }
 
@@ -547,7 +562,7 @@ class JogDial {
 
 
     rotationToNativeAngle(n) {
-        
+
         return n - 90;
     }
 
