@@ -2,11 +2,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Example 1
     const example1Node = document.getElementById('example1');
-    new JogDial(example1Node,
-        {
-            minAngle: 0,
-            maxAngle: 360
-        });
+    new JogDial(example1Node);
 
     example1Node.addEventListener('jd.update', e => {
         const node = document.querySelector('#example1_progress div');

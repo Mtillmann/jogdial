@@ -219,39 +219,9 @@ export default class JogDial {
                     actualAngle -= this.wheelTouchOffset;
                 }
 
-
-
-
                 let angle = this.normalizeAngle(actualAngle);
-                this.rotation.current = this.COMBINEDCALCULATION(angle);
+                this.COMBINEDCALCULATION(angle);
 
-                //let rotation = this.rotation.current;
-
-                //({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
-
-                //this.setAttributes(rotation, angle);
-                //this.angleTo(actualAngle);
-
-
-                //this.sampleInput();
-
-
-                /*
-                                let angle = this.normalizeAngle(actualAngle);
-                                let quadrant = this.getQuadrant(x, y);
-                
-                                //Calculate the current rotation value based on pointer offset
-                                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
-                                let rotation = this.rotation.current;
-                
-                                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
-                
-                                this.setAttributes(rotation, angle);
-                                this.angleTo(actualAngle);
-                
-                
-                                this.sampleInput();
-                                */
             }
         };
 
@@ -282,24 +252,7 @@ export default class JogDial {
             }
 
             let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
-
-            this.rotation.current = this.COMBINEDCALCULATION(angle);
-
-            /*
-            let actualAngle = this.enforceRotation(angle - 90);
-
-
-            let rotation = this.enforceRotation(this.rotation.current + delta);
-*/
-           // ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
-
-           /*
-            angle = this.enforceAngleBounds(angle);
-            this.setAttributes(rotation, angle);
-            this.angleTo(actualAngle);
-
-            this.sampleInput();
-            */
+            this.COMBINEDCALCULATION(angle);
             this.mouseWheelEndTimeout = setTimeout(() => {
                 this.applyMomentum();
             }, 100);
@@ -331,35 +284,43 @@ export default class JogDial {
         const x = -this.radius * Math.sin(radians);
         const y = -this.radius * Math.cos(radians);
         let quadrant = this.getQuadrant(x, y) ?? this.quadrant.previous;
-
+        let jump = false;
 
         if (quadrant === 1 && this.quadrant.previous === 2) { //From 360 to 0
             delta = 360;
+            jump = 1;
         } else if (quadrant === 2 && this.quadrant.previous === 1) { //From 0 to 360
             delta = -360;
+            jump = -1;
         }
 
         rotation = angle + delta - this.rotation.previous + this.rotation.current;
         this.rotation.previous = angle; //  0 ~ 360
         this.quadrant.previous = quadrant; //  1 ~ 4
 
+
+        rotation = this.enforceRotation(rotation);
         //when there is no more inifite rotation, this wont work
-        /*
+        
+        
+/*
         if (this.options.maxAngle !== Infinity && this.options.maxAngle <= rotation) {
             rotation = this.options.maxAngle;
+
+            return;
             
         } else if (this.options.minAngle !== -Infinity && this.options.minAngle >= rotation) {
             rotation = this.options.minAngle;  
+            return;
         }
 */
 
-                this.setAttributes(angle, angle);
-                this.angleTo(angle - 90);
+        this.setAttributes(angle, angle);
+        this.angleTo(angle - 90);
+        this.sampleInput();
 
-
-                this.sampleInput();
-
-        return this.enforceRotation(rotation);
+        this.rotation.current = rotation;
+        return rotation;
     }
 
     /**
