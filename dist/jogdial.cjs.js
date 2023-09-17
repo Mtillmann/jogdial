@@ -33,7 +33,8 @@ class JogDial {
         eventPrefix: 'jd',
         roundInputValue: true,
         input: null,
-        roundStateValues: false
+        roundStateValues: false,
+        mousewheel: true
     };
 
     // Predefined DOM events
@@ -199,10 +200,7 @@ class JogDial {
 
                 if (this.setWheelTouchOffset && !this.options.wheelSnap) {
                     const currentAngle = this.normalizeAngle(this.normalizeRotation(this.rotation.current));
-
                     this.wheelTouchOffset = this.normalizeAngle(actualAngle) - currentAngle;
-
-                    
                     this.setWheelTouchOffset = false;
                 }
 
@@ -225,15 +223,7 @@ class JogDial {
                     actualAngle = this.normalizeRotation(rotation);
                     angle = this.normalizeAngle(actualAngle);
                 }
-
-
-
-
-
-
                 this.setAttributes(rotation, angle);
-
-                // update angle
                 this.angleTo(actualAngle);
             }
         };
