@@ -296,7 +296,27 @@
                     delta = -this.options.mouseWheelMaxDelta;
                 }
 
+
+
                 let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
+
+                
+
+                this.rotation.current = this.COMBINEDCALCULATION(angle);
+                let actualAngle = this.enforceRotation(angle - 90);
+
+                let rotation = this.enforceRotation(this.rotation.current + delta);
+     ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
+
+                
+                //this.rotation.current = rotation;
+
+                angle = this.enforceAngleBounds(angle);
+                this.setAttributes(rotation, angle);
+                this.angleTo(actualAngle);
+
+                return;
+                /*
                 let actualAngle = this.enforceRotation(angle - 90);
 
 
@@ -313,7 +333,11 @@
 
                 //Calculate the current rotation value based on pointer offset
                 this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
-     ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
+
+                console.log({asdf :this.rotation.current})
+                
+
+                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
 
                 this.rotation.current = rotation;
 
@@ -327,6 +351,7 @@
                 this.mouseWheelEndTimeout = setTimeout(() => {
                     this.applyMomentum();
                 }, 100);
+                */
             };
 
 
@@ -341,6 +366,32 @@
             }
 
         };
+
+
+        COMBINEDCALCULATION(angle) {
+
+            
+            let rotation;
+            let delta = 0;
+
+            const radians = angle * (Math.PI / 180);
+            const x = -this.radius * Math.sin(radians);
+            const y = -this.radius * Math.cos(radians);
+            let quadrant = this.getQuadrant(x, y) ?? this.quadrant.previous;
+
+
+            if (quadrant === 1 && this.quadrant.previous === 2) { //From 360 to 0
+                delta = 360;
+            } else if (quadrant === 2 && this.quadrant.previous === 1) { //From 0 to 360
+                delta = -360;
+            }
+
+            rotation = angle + delta - this.rotation.previous + this.rotation.current;
+            this.rotation.previous = angle; //  0 ~ 360
+            this.quadrant.previous = quadrant; //  1 ~ 4
+
+            return this.enforceRotation(rotation);
+        }
 
         /**
          * 
