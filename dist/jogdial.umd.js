@@ -213,37 +213,18 @@
                     let y = offset.y - this.center.y + this.wheel.offsetTop;
 
 
-                    console.log({ x, y });
-
+                    
                     if (this.setWheelTouchOffset && !this.options.wheelSnap) {
-
                         const actualAngle = Math.atan2(y, x) * (180 / Math.PI);
-
                         const currentAngle = this.rotationToNativeAngle(this.rotation.current);
                         this.wheelTouchOffset = (actualAngle - currentAngle) % 360;
-
-
-
-
                         this.setWheelTouchOffset = false;
-
-                        //console.log({currentAngle, actualAngle})
-                        console.log(this.wheelTouchOffset, this.wheelTouchOffset % 360);
                     }
 
                     let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
 
                     if (this.wheelTouchOffset) {
                         actualAngle -= this.wheelTouchOffset;
-                        /*
-                        //rotate x and y by wheelTouchOffset
-                        const radians = this.wheelTouchOffset * (Math.PI / 180);
-                        const cos = Math.cos(radians);
-                        const sin = Math.sin(radians);
-                        x = x * cos - y * sin;
-                        y = x * sin + y * cos;
-    */
-
                     }
 
 
@@ -296,62 +277,24 @@
                     delta = -this.options.mouseWheelMaxDelta;
                 }
 
-
-
                 let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
-
-                
 
                 this.rotation.current = this.COMBINEDCALCULATION(angle);
                 let actualAngle = this.enforceRotation(angle - 90);
 
                 let rotation = this.enforceRotation(this.rotation.current + delta);
-     ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
 
-                
-                //this.rotation.current = rotation;
+                ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
 
                 angle = this.enforceAngleBounds(angle);
                 this.setAttributes(rotation, angle);
                 this.angleTo(actualAngle);
-
-                return;
-                /*
-                let actualAngle = this.enforceRotation(angle - 90);
-
-
-
-
-
-                let rotation = this.enforceRotation(this.rotation.current + delta);
-
-
-                const radians = rotation * (Math.PI / 180);
-                const x = -this.radius * Math.sin(radians);
-                const y = -this.radius * Math.cos(radians);
-                let quadrant = this.getQuadrant(x, y);
-
-                //Calculate the current rotation value based on pointer offset
-                this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
-
-                console.log({asdf :this.rotation.current})
                 
-
-                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
-
-                this.rotation.current = rotation;
-
-                angle = this.enforceAngleBounds(angle);
-                this.setAttributes(rotation, angle);
-                this.angleTo(actualAngle);
-
                 this.sampleInput();
-
-
                 this.mouseWheelEndTimeout = setTimeout(() => {
                     this.applyMomentum();
                 }, 100);
-                */
+                
             };
 
 
