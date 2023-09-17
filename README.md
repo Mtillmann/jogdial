@@ -1,4 +1,4 @@
-# JogDial.js 2.0
+# JogDial.js 2.1.0
 
 Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with the following changes:
 
@@ -50,6 +50,7 @@ Here is a list of options can be used on JogDial.
 |:-------------------------|:--------------------------------------------------------------------|:----------|
 | debug `bool`             | Adds default styling on the instance                                | false     |
 | mode `string`            | Set the active touch area of JogDial control. 'knob' or 'wheel'     | knob      |
+| wheelSnap | When set, the wheel will snap to where it was touched/clicked. _Added in 2.1.0_ | false |
 | ~~knobSize~~ `int`       | see below...                                                        |           |
 | ~~wheelSize~~ `int`      | see below...                                                        |           |
 | angle `int`              | Set the angle of wheel at start                                     | 0         |

@@ -197,11 +197,11 @@ class JogDial {
                 let angle = this.normalizeAngle(actualAngle);
 
 
-                if (this.setWheelTouchOffset) {
+                if (this.setWheelTouchOffset && !this.options.wheelSnap) {
+                    //set offset only once per interaction
                     this.wheelTouchOffset = this.rotation.current - angle;
                     this.setWheelTouchOffset = false;
                 }
-
 
                 actualAngle += this.wheelTouchOffset;
                 angle += this.wheelTouchOffset;
