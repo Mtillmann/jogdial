@@ -18,6 +18,8 @@
         };
 
         pressed = false;
+        wheelTouchOffset = 0;
+        setWheelTouchOffset = false;
 
         // Detect mouse event type
         supportsTouchEvents = ('ontouchstart' in window);
@@ -26,6 +28,7 @@
         defaults = {
             debug: false,
             mode: 'knob',
+            wheelSnap: false,
             angle: 0,
             minAngle: -Infinity,
             maxAngle: Infinity,
@@ -47,11 +50,11 @@
 
         constructor(element, options) {
 
-            options = {...this.defaults, ...options};
+            options = { ...this.defaults, ...options };
             this.options = options;
 
             ['angle', 'minAngle', 'maxAngle'].forEach(key => {
-                if(typeof this.options[key] === 'string'){
+                if (typeof this.options[key] === 'string') {
                     this.options[key] = parseFloat(this.options[key]);
                 }
             });
@@ -84,7 +87,7 @@
 
             this.setupDOM();
             this.setupEvents();
-            this.angleTo(this.convertClockToUnit(this.options.angle), this.options.angle, false);
+            this.angleTo(this.normalizeRotation(this.options.angle), this.options.angle, false);
         }
 
         /**
@@ -95,7 +98,7 @@
         set(input, emitEvent = true) {
             const maxAngle = this.options.maxAngle || 360;
             const angle = (input > maxAngle) ? maxAngle : input;
-            this.angleTo(this.convertClockToUnit(angle), angle, emitEvent);
+            this.angleTo(this.normalizeRotation(angle), angle, emitEvent);
         }
 
         setupDOM() {
@@ -129,7 +132,7 @@
 
             //set radius and center point value
             this.radius = wheelRadius - knobRadius;
-            this.center = {x: wheelRadius + wheelMarginLeft, y: wheelRadius + wheelMarginTop};
+            this.center = { x: wheelRadius + wheelMarginLeft, y: wheelRadius + wheelMarginTop };
 
             if (this.options.debug) {
                 this.element.dataset[this.attrNames.debug] = 'true';
@@ -167,6 +170,7 @@
                         break;
                     case 'wheel':
                         this.pressed = true;
+                        this.setWheelTouchOffset = true;
                         mouseDragEvent(e);
                         break;
                 }
@@ -184,6 +188,7 @@
 
             // mouseDragEvent (MOUSE_MOVE)
             const mouseDragEvent = e => {
+
                 if (this.pressed) {
                     e.preventDefault();
 
@@ -191,28 +196,42 @@
                     const x = offset.x - this.center.x + this.wheel.offsetLeft;
                     const y = offset.y - this.center.y + this.wheel.offsetTop;
 
-                    let radian = Math.atan2(y, x) * (180 / Math.PI);
+                    let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
                     let quadrant = this.getQuadrant(x, y);
-                    let angle = this.convertUnitToClock(radian);
+                    let angle = this.normalizeAngle(actualAngle);
+
+
+                    if (this.setWheelTouchOffset) {
+                        this.wheelTouchOffset = this.rotation.current - angle;
+                        this.setWheelTouchOffset = false;
+                    }
+
+
+                    actualAngle += this.wheelTouchOffset;
+                    angle += this.wheelTouchOffset;
 
                     //Calculate the current rotation value based on pointer offset
                     this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
                     let rotation = this.rotation.current;
 
+
                     if (this.options.maxAngle !== Infinity && this.options.maxAngle <= rotation) {
                         rotation = this.options.maxAngle;
-                        radian = this.convertClockToUnit(rotation);
-                        angle = this.convertUnitToClock(radian);
+                        actualAngle = this.normalizeRotation(rotation);
+                        angle = this.normalizeAngle(actualAngle);
                     } else if (this.options.minAngle !== -Infinity && this.options.minAngle >= rotation) {
                         rotation = this.options.minAngle;
-                        radian = this.convertClockToUnit(rotation);
-                        angle = this.convertUnitToClock(radian);
+                        actualAngle = this.normalizeRotation(rotation);
+                        angle = this.normalizeAngle(actualAngle);
                     }
+
+
+
 
                     this.setAttributes(rotation, angle);
 
                     // update angle
-                    this.angleTo(radian);
+                    this.angleTo(actualAngle);
                 }
             };
 
@@ -251,7 +270,7 @@
             this.knob.style.setProperty('top', y + 'px');
 
             if (!this.element.dataset.rotation === undefined) {
-                this.setAttributes(this.options.angle, this.convertUnitToClock(radian));
+                this.setAttributes(this.options.angle, this.normalizeAngle(radian));
             }
 
             if (triggeredAngle) {
@@ -324,9 +343,9 @@
         getCoordinates(e) {
             const target = this.wheel;
             const rect = target.getBoundingClientRect();
-            const x = ((this.supportsTouchEvents) ? e.targetTouches[0].clientX : e.clientX) - rect.left;
-            const y = ((this.supportsTouchEvents) ? e.targetTouches[0].clientY : e.clientY) - rect.top;
-            return {x, y};
+            const x = (this.supportsTouchEvents ? e.targetTouches[0].clientX : e.clientX) - rect.left;
+            const y = (this.supportsTouchEvents ? e.targetTouches[0].clientY : e.clientY) - rect.top;
+            return { x, y };
         };
 
         // Return the current quadrant.
@@ -359,11 +378,11 @@
             type.split(' ').forEach(t => el.addEventListener(t, handler, capture));
         };
 
-        convertClockToUnit(n) {
+        normalizeRotation(n) {
             return n % 360 - 90;
         }
 
-        convertUnitToClock(n) {
+        normalizeAngle(n) {
             return (n >= -180 && n < -90) ? 450 + n : 90 + n;
         }
 
