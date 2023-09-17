@@ -42,6 +42,10 @@ window.addEventListener('DOMContentLoaded', () => {
     // Example 5
     new JogDial(document.getElementById('example5'), {mode: 'wheel'});
 
+    // Example 5b
+    new JogDial(document.getElementById('example5b'), {mode: 'wheel', wheelSnap: true});
+
+
     // Example 6
     new JogDial(document.getElementById('example6'), {debug: true, mode: 'wheel', roundStateValues: true});
 

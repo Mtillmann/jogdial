@@ -14,12 +14,14 @@
     --bs-progress-bar-transition: none;
 }
 
+#example5b .wheel,
 #example5 .wheel{
     border:2px dashed #000;
     border-radius: 50%;
 }
 
-#example5 .knob::before{
+#example5 .knob::before,
+#example5b .knob::before{
     content:"☝️";
     position: absolute;
     left:50%;
@@ -31,6 +33,14 @@
     z-index:100000;
     text-align: center;
     transform: translate(-50%, -50%) rotate(var(--jd-angle, 0deg));
+}
+
+#example5b .knob::before{
+    content:'😬';
+}
+
+#example5b[data-jd-pressed] .knob::before{
+    content:'🙄';
 }
 
 #example6::before {
