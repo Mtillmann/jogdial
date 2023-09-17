@@ -5,6 +5,7 @@
   "main": "dist/jogdial.cjs.js",
   "module": "dist/jogdial.esm.js",
   "browser": "dist/jogdial.umd.js",
+  "type": "module",
   "scripts": {
     "build": "rollup -c && terser dist/jogdial.umd.js --output dist/jogdial.umd.min.js --compress --mangle",
     "dev": "rollup -c -w"

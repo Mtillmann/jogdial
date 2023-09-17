@@ -1,4 +1,4 @@
-import pkg from './package.json';
+import pkg from './package.json' assert {type: 'json'};
 import copy from 'rollup-plugin-copy';
 
 export default [
