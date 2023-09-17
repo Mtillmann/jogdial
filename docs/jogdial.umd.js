@@ -196,19 +196,24 @@
                     const x = offset.x - this.center.x + this.wheel.offsetLeft;
                     const y = offset.y - this.center.y + this.wheel.offsetTop;
 
-                    let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
-                    let quadrant = this.getQuadrant(x, y);
-                    let angle = this.normalizeAngle(actualAngle);
 
+
+
+                    let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
 
                     if (this.setWheelTouchOffset && !this.options.wheelSnap) {
-                        //set offset only once per interaction
-                        this.wheelTouchOffset = this.rotation.current - angle;
+                        const currentAngle = this.normalizeAngle(this.normalizeRotation(this.rotation.current));
+
+                        this.wheelTouchOffset = this.normalizeAngle(actualAngle) - currentAngle;
+
+                        
                         this.setWheelTouchOffset = false;
                     }
 
-                    actualAngle += this.wheelTouchOffset;
-                    angle += this.wheelTouchOffset;
+                    actualAngle -= this.wheelTouchOffset;
+
+                    let angle = this.normalizeAngle(actualAngle);
+                    let quadrant = this.getQuadrant(x, y);
 
                     //Calculate the current rotation value based on pointer offset
                     this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
@@ -224,6 +229,8 @@
                         actualAngle = this.normalizeRotation(rotation);
                         angle = this.normalizeAngle(actualAngle);
                     }
+
+
 
 
 
@@ -341,6 +348,7 @@
 
         //Calculating x and y coordinates
         getCoordinates(e) {
+
             const target = this.wheel;
             const rect = target.getBoundingClientRect();
             const x = (this.supportsTouchEvents ? e.targetTouches[0].clientX : e.clientX) - rect.left;
@@ -383,8 +391,19 @@
         }
 
         normalizeAngle(n) {
-            return (n >= -180 && n < -90) ? 450 + n : 90 + n;
+            n = (n >= -180 && n < -90) ? 450 + n : 90 + n;
+
+            if (n < 0) {
+                n += 360;
+            }
+            if (n > 360) {
+                n -= 360;
+            }
+
+            return n;
         }
+
+
 
 
     }

@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('example2_debug').textContent = JSON.stringify(e.detail, null, 2);
     });
 
-    const example2Instance = new JogDial(example2Node, {debug: true});
+    const example2Instance = new JogDial(example2Node, {debug: true, mode: 'wheel'});
     example2Instance.set(123);
 
     // Example 3
