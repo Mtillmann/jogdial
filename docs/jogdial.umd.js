@@ -38,7 +38,7 @@
             roundInputValue: true,
             input: null,
             roundStateValues: false,
-            mousewheel: true,
+            mouseWheel: true,
             mouseWheelDeltaScale: 0.25,
         };
 
@@ -268,8 +268,8 @@
             this.addEventListeners(this.element, this.domEvent.MOUSE_UP, mouseUpEvent, false);
             this.addEventListeners(this.element, this.domEvent.MOUSE_OUT, mouseUpEvent, false);
 
-            if (this.options.mousewheel) {
-                console.log('mousewheel');
+            if (this.options.mouseWheel) {
+                console.log('mouseWheel');
                 this.addEventListeners(this.element, this.domEvent.MOUSE_WHEEL, mouseWheelEvent, false);
             }    };
 

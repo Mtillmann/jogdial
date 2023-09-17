@@ -1,4 +1,4 @@
-# jogdial 2.1.0
+# jogdial 2.2.0
 
 Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with the following changes:
 
@@ -11,6 +11,7 @@ Forked from [Sean Oh's JogDial.js](https://github.com/ohsiwon/JogDial.js) with t
 * provides ESM, CJS and UMD builds
 * simple input binding
 * improved examples
+* mousewheel support
 * about 2KiB minified and zipped
 
 ## Examples
@@ -62,6 +63,8 @@ Here is a list of options can be used on JogDial.
 | roundInputValue `bool`   | When set, input values will be rounded                              | true      |
 | input `HTMLInputElement` | input-element to bind the dial to                                   | null      |
 | roundStateValues `bool`  | When set, the state values propagated to dom and events are rounded | false     |
+| mouseWheel | When set, the wheel can be rotated using the mouse wheel. _Added in 2.2.0_ | true |
+| mouseWheelDeltaScale | Controls the scaling factor of the mouse wheel Y delta. _Added in 2.2.0_ | 0.25 |
 
 ### CSS Options
 
