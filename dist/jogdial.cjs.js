@@ -208,8 +208,6 @@ class JogDial {
                 let x = offset.x - this.center.x + this.wheel.offsetLeft;
                 let y = offset.y - this.center.y + this.wheel.offsetTop;
 
-
-                
                 if (this.setWheelTouchOffset && !this.options.wheelSnap) {
                     const actualAngle = Math.atan2(y, x) * (180 / Math.PI);
                     const currentAngle = this.rotationToNativeAngle(this.rotation.current);
