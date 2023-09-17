@@ -209,18 +209,47 @@
                     e.preventDefault();
 
                     const offset = this.getCoordinates(e);
-                    const x = offset.x - this.center.x + this.wheel.offsetLeft;
-                    const y = offset.y - this.center.y + this.wheel.offsetTop;
+                    let x = offset.x - this.center.x + this.wheel.offsetLeft;
+                    let y = offset.y - this.center.y + this.wheel.offsetTop;
+
+                    if (this.setWheelTouchOffset && !this.options.wheelSnap) {
+
+                        const actualAngle = Math.atan2(y, x) * (180 / Math.PI);
+
+                        const currentAngle = this.rotationToNativeAngle(this.rotation.current);
+                        this.wheelTouchOffset = (actualAngle - currentAngle) % 360;
+                        
+
+                    
+
+                        this.setWheelTouchOffset = false;
+
+                        //console.log({currentAngle, actualAngle})
+                        console.log(this.wheelTouchOffset, this.wheelTouchOffset % 360);
+                    }
 
                     let actualAngle = Math.atan2(y, x) * (180 / Math.PI);
 
-                    if (this.setWheelTouchOffset && !this.options.wheelSnap) {
-                        const currentAngle = this.normalizeAngle(this.normalizeRotation(this.rotation.current));
-                        this.wheelTouchOffset = this.normalizeAngle(actualAngle) - currentAngle;
-                        this.setWheelTouchOffset = false;
+                    if(this.wheelTouchOffset){
+                        actualAngle -= this.wheelTouchOffset;
+                        /*
+                        //rotate x and y by wheelTouchOffset
+                        const radians = this.wheelTouchOffset * (Math.PI / 180);
+                        const cos = Math.cos(radians);
+                        const sin = Math.sin(radians);
+                        x = x * cos - y * sin;
+                        y = x * sin + y * cos;
+    */
+                        
                     }
 
-                    actualAngle -= this.wheelTouchOffset;
+
+                    
+                    
+
+
+
+                    //actualAngle -= this.wheelTouchOffset;
 
                     let angle = this.normalizeAngle(actualAngle);
                     let quadrant = this.getQuadrant(x, y);
@@ -232,7 +261,7 @@
 
                     this.setAttributes(rotation, angle);
                     this.angleTo(actualAngle);
-
+                    
 
                     this.sampleInput();
                 }
@@ -264,9 +293,11 @@
                     delta = -this.options.mouseWheelMaxDelta;
                 }
 
-                let angle = this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta);
-                let actualAngle = angle - 90;
-                let rotation = this.rotation.current + delta;
+                let angle = this.enforceRotation(this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta));
+                let actualAngle = this.enforceRotation(angle - 90);
+
+            
+                let rotation = this.enforceRotation(this.rotation.current + delta);
      ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle));
 
                 this.rotation.current = rotation;
@@ -301,7 +332,7 @@
          * @param rotation
          * @param angle
          * @param actualAngle
-         * @returns {{rotation: *, angle: *, actualAngle: *}}
+         * @returns {rotation: *, angle: *, actualAngle: *}
          * */
         applyConstraints(rotation, angle, actualAngle) {
             if (this.options.maxAngle !== Infinity && this.options.maxAngle <= rotation) {
@@ -335,7 +366,8 @@
 
         //todo...
         applyMomentum() {
-            
+            return;
+            /*
             //sample into last 1 second
             const cutoff = 1000;
             const samples = this.inputSamples.filter(([time, value]) => Date.now() - time < cutoff);
@@ -348,8 +380,9 @@
 
             const first = samples[0];
             const last = samples.at(-1);
-            last[0] - first[0];
-            last[1] - first[1];
+            const time = last[0] - first[0];
+            let dist = last[1] - first[1];
+            */
         }
 
         /**
@@ -359,6 +392,9 @@
          * @param emitEvent
          */
         angleTo(degrees, triggeredAngle = false, emitEvent = true) {
+
+            degrees = degrees % 360;
+
             const radian = degrees * (Math.PI / 180);
             const x = Math.cos(radian) * this.radius + this.center.x;
             const y = Math.sin(radian) * this.radius + this.center.y;
@@ -465,7 +501,8 @@
             rotation = newAngle + delta - this.rotation.previous + this.rotation.current;
             this.rotation.previous = newAngle; // return 0 ~ 360
             this.quadrant.previous = quadrant; // return 1 ~ 4
-            return rotation;
+
+            return this.enforceRotation(rotation);
         };
 
         //Checking collision
@@ -477,6 +514,21 @@
             type.split(' ').forEach(t => el.addEventListener(t, handler, capture));
         };
 
+
+        enforceRotation(rotation){
+            rotation = rotation % 360;
+            if(rotation < 0){
+                rotation += 360;
+            }
+            if(rotation > 360){
+                rotation -= 360;
+            }
+
+            return rotation;
+
+        }
+
+        //no idea
         normalizeRotation(n) {
             return n % 360 - 90;
         }
@@ -500,6 +552,10 @@
         }
 
 
+        rotationToNativeAngle(n) {
+            
+            return n - 90;
+        }
 
 
     }
