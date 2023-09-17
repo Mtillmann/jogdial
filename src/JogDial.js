@@ -34,19 +34,24 @@ export default class JogDial {
         roundStateValues: false,
         mouseWheel: true,
         mouseWheelDeltaScale: 0.25,
+        mouseWheelMaxDelta: 5,
     };
 
     // Predefined DOM events
     domEvent = {
-        MOUSE_DOWN: 'mousedown', 
-        MOUSE_MOVE: 'mousemove', 
-        MOUSE_OUT: 'mouseout', 
+        MOUSE_DOWN: 'mousedown',
+        MOUSE_MOVE: 'mousemove',
+        MOUSE_OUT: 'mouseout',
         MOUSE_UP: 'mouseup',
         MOUSE_WHEEL: 'wheel',
     };
 
     attrNames = {};
     cssVarNames = {};
+
+    inputSamples = [];
+
+    mouseWheelEndTimeout = null;
 
     constructor(element, options) {
 
@@ -96,6 +101,9 @@ export default class JogDial {
      * @param emitEvent
      */
     set(input, emitEvent = true) {
+
+        //flush input sample stack on external input
+        this.inputSamples = [];
         const maxAngle = this.options.maxAngle || 360;
         const angle = (input > maxAngle) ? maxAngle : input;
         this.angleTo(this.normalizeRotation(angle), angle, emitEvent);
@@ -148,7 +156,7 @@ export default class JogDial {
 
     setupEvents() {
 
-        
+
         //Detect event support type and override values
         if (this.supportsTouchEvents) { // Mobile standard
             this.domEvent = {
@@ -215,16 +223,20 @@ export default class JogDial {
                 this.rotation.current = this.getRotation((quadrant === undefined) ? this.quadrant.previous : quadrant, angle);
                 let rotation = this.rotation.current;
 
-                ;({rotation, angle, actualAngle} = this.applyConstraints(rotation, angle, actualAngle))
+                ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
 
                 this.setAttributes(rotation, angle);
                 this.angleTo(actualAngle);
+
+
+                this.sampleInput();
             }
         };
 
         const mouseUpEvent = () => {
             if (this.pressed) {
                 this.pressed = false;
+                this.applyMomentum();
                 delete this.element.dataset[this.attrNames.pressed];
                 this.element.dispatchEvent(new CustomEvent(`${this.options.eventPrefix}.end`, {
                     detail: this.getState()
@@ -232,29 +244,39 @@ export default class JogDial {
             }
         };
 
+
+
         const mouseWheelEvent = e => {
 
             e.preventDefault();
-            
+
             let delta = e.deltaY * this.options.mouseWheelDeltaScale;
-            let angle = this.normalizeAngle(this.normalizeRotation(this.rotation.current)+ delta);
+
+            if (delta > this.options.mouseWheelMaxDelta) {
+                delta = this.options.mouseWheelMaxDelta;
+            }
+            if (delta < -this.options.mouseWheelMaxDelta) {
+                delta = -this.options.mouseWheelMaxDelta;
+            }
+
+            let angle = this.normalizeAngle(this.normalizeRotation(this.rotation.current) + delta);
             let actualAngle = angle - 90;
             let rotation = this.rotation.current + delta;
-            
-            ;({rotation, angle, actualAngle} = this.applyConstraints(rotation, angle, actualAngle))
 
-            this.rotation.current = rotation;   
+            ; ({ rotation, angle, actualAngle } = this.applyConstraints(rotation, angle, actualAngle))
+
+            this.rotation.current = rotation;
 
             angle = this.enforceAngleBounds(angle);
-            
-
-            if(angle < 0 || angle > 360) {
-                debugger
-            }
-            
             this.setAttributes(rotation, angle);
             this.angleTo(actualAngle);
 
+            this.sampleInput();
+
+            
+            this.mouseWheelEndTimeout = setTimeout(() => {
+                this.applyMomentum();
+            }, 100);
         };
 
 
@@ -265,9 +287,10 @@ export default class JogDial {
         this.addEventListeners(this.element, this.domEvent.MOUSE_OUT, mouseUpEvent, false);
 
         if (this.options.mouseWheel) {
-            console.log('mouseWheel');
             this.addEventListeners(this.element, this.domEvent.MOUSE_WHEEL, mouseWheelEvent, false);
         };
+
+
     };
 
     /**
@@ -288,7 +311,42 @@ export default class JogDial {
             angle = this.normalizeAngle(actualAngle);
         }
 
-        return {rotation, angle, actualAngle};
+        return { rotation, angle, actualAngle };
+    }
+
+
+    sampleInput() {
+        //do this regardless of origin
+        clearTimeout(this.mouseWheelEndTimeout);
+
+        const cutoff = 1000;
+        const lastSample = this.inputSamples.at(-1);
+        const diff = Date.now() - (lastSample?.[0] || 0);
+
+        if (diff > cutoff) {
+            this.inputSamples = [];
+        }
+
+        this.inputSamples.push([Date.now(), this.rotation.current]);
+    }
+
+    //todo...
+    applyMomentum() {
+        
+        //sample into last 1 second
+        const cutoff = 1000;
+        const samples = this.inputSamples.filter(([time, value]) => Date.now() - time < cutoff);
+        
+        //reset anyway
+        this.inputSamples = [];
+        if(samples.length < 2){
+            return
+        }
+
+        const first = samples[0];
+        const last = samples.at(-1);
+        const time = last[0] - first[0];
+        let dist = last[1] - first[1];
     }
 
     /**
@@ -420,7 +478,7 @@ export default class JogDial {
         return n % 360 - 90;
     }
 
-    enforceAngleBounds(n){
+    enforceAngleBounds(n) {
         if (n < 0) {
             return n + 360;
         }
@@ -433,7 +491,7 @@ export default class JogDial {
     normalizeAngle(n) {
         n = (n >= -180 && n < -90) ? 450 + n : 90 + n;
 
-        
+
 
         return this.enforceAngleBounds(n);
     }

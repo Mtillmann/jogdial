@@ -51,7 +51,7 @@ Here is a list of options can be used on JogDial.
 |:-------------------------|:--------------------------------------------------------------------|:----------|
 | debug `bool`             | Adds default styling on the instance                                | false     |
 | mode `string`            | Set the active touch area of JogDial control. 'knob' or 'wheel'     | knob      |
-| wheelSnap | When set, the wheel will snap to where it was touched/clicked. _Added in 2.1.0_ | false |
+| wheelSnap `bool` | When set, the wheel will snap to where it was touched/clicked. _Added in 2.1.0_ | false |
 | ~~knobSize~~ `int`       | see below...                                                        |           |
 | ~~wheelSize~~ `int`      | see below...                                                        |           |
 | angle `int`              | Set the angle of wheel at start                                     | 0         |
@@ -63,8 +63,9 @@ Here is a list of options can be used on JogDial.
 | roundInputValue `bool`   | When set, input values will be rounded                              | true      |
 | input `HTMLInputElement` | input-element to bind the dial to                                   | null      |
 | roundStateValues `bool`  | When set, the state values propagated to dom and events are rounded | false     |
-| mouseWheel | When set, the wheel can be rotated using the mouse wheel. _Added in 2.2.0_ | true |
-| mouseWheelDeltaScale | Controls the scaling factor of the mouse wheel Y delta. _Added in 2.2.0_ | 0.25 |
+| mouseWheel `bool` | When set, the wheel can be rotated using the mouse wheel. _Added in 2.2.0_ | true |
+| mouseWheelDeltaScale `float` | Controls the scaling factor of the mouse wheel Y delta. _Added in 2.2.0_ | 0.25 |
+| mouseWheelMaxDelta `float` | determines the maximum degrees to rotate per wheel event. _Added in 2.2.0_ | 5 |
 
 ### CSS Options
 
